@@ -22,15 +22,15 @@ jobs:
     - name: Log in to registry
       uses: docker/login-action@v1
       with:
-        registry: https://dynastic20220319200702.azurecr.io/
-        username: ${{ secrets.AzureAppService_ContainerUsername_96f7eaa037e345a2b4b465018fbb0bb7 }}
-        password: ${{ secrets.AzureAppService_ContainerPassword_7e6e37be039d4a39bbdeba766694daeb }}
+        registry: https://dynastic.azurecr.io/
+        username: ${{ secrets.AzureAppService_ContainerUsername_df610771659349d78515a9a698693811 }}
+        password: ${{ secrets.AzureAppService_ContainerPassword_b8831c5a1c9d483e859d630affcc928e }}
 
     - name: Build and push container image to registry
       uses: docker/build-push-action@v2
       with:
         push: true
-        tags: dynastic20220319200702.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_96f7eaa037e345a2b4b465018fbb0bb7 }}/dynastic:${{ github.sha }}
+        tags: dynastic.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_df610771659349d78515a9a698693811 }}/dynastic:${{ github.sha }}
         file: ./Dockerfile
 
   deploy:
@@ -47,5 +47,5 @@ jobs:
       with:
         app-name: 'dynastic-web'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_f4791e6b18eb461f95ead51d6bbd6f84 }}
-        images: 'dynastic20220319200702.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_96f7eaa037e345a2b4b465018fbb0bb7 }}/dynastic:${{ github.sha }}'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_7921e82a93444040acbdc7d65633d3ea }}
+        images: 'dynastic.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_df610771659349d78515a9a698693811 }}/dynastic:${{ github.sha }}'
