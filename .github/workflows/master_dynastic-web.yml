@@ -31,7 +31,7 @@ jobs:
       with:
         push: true
         tags: dynastic.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_df610771659349d78515a9a698693811 }}/dynastic:${{ github.sha }}
-        file: ./Dynastic/Dockerfile
+        file: ./Dynastic.API/Dockerfile
 
   deploy:
     runs-on: ubuntu-latest

@@ -8,7 +8,7 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["Dynastic.API/Dynastic.API.csproj", "Dynastic/"]
-RUN dotnet restore "Dynastic.API/Dynastic.API.csproj"
+RUN dotnet restore "Dynastic/Dynastic.API.csproj"
 COPY . .
 WORKDIR "/src/Dynastic"
 RUN dotnet build "Dynastic.API.csproj" -c Release -o /app/build
