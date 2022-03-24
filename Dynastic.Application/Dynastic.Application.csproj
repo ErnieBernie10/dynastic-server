@@ -11,4 +11,8 @@
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Dynastic.Domain\Dynastic.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
