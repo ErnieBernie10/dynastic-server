@@ -7,16 +7,16 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["Dynastic/Dynastic.csproj", "Dynastic/"]
-RUN dotnet restore "Dynastic/Dynastic.csproj"
+COPY ["Dynastic.API/Dynastic.API.csproj", "Dynastic/"]
+RUN dotnet restore "Dynastic.API/Dynastic.API.csproj"
 COPY . .
 WORKDIR "/src/Dynastic"
-RUN dotnet build "Dynastic.csproj" -c Release -o /app/build
+RUN dotnet build "Dynastic.API.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Dynastic.csproj" -c Release -o /app/publish
+RUN dotnet publish "Dynastic.API.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Dynastic.dll"]
+ENTRYPOINT ["dotnet", "Dynastic.API.dll"]
