@@ -14,4 +14,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Dynastic.Application\Dynastic.Application.csproj" />
+    <ProjectReference Include="..\Dynastic.Architecture\Dynastic.Infrastrucutre.csproj" />
+    <ProjectReference Include="..\Dynastic.Domain\Dynastic.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
