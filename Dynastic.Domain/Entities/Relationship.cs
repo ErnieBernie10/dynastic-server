@@ -10,7 +10,8 @@ namespace Dynastic.Domain.Entities
     {
         public Person Person { get; set; }
         public Guid PersonId { get; set; }
-        public Person Partner { get; set; }
-        public Guid PartnerId { get; set; } 
+        public Person? Partner { get; set; }
+        public Guid? PartnerId { get; set; }
+        public ICollection<ChildRelationship> Children { get; set; }
     }
 }

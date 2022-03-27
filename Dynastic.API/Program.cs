@@ -3,6 +3,10 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Dynastic.Infrastructure;
 using Dynastic.Application;
+using Dynastic.Infrastructure.Persistence;
+using Dynastic.Infrastrucutre.Persistence;
+using Dynastic.Domain.Interface;
+using Dynastic.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +32,9 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddInfrastructure();
 builder.Services.AddApplication();
 
+builder.Services.AddSingleton<ICurrentUserService, CurrentUserService>();
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -40,6 +47,9 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    var scope = app.Services.CreateScope();
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    await ApplicationDbContextSeed.SeedSampleDataAsync(context);
 }
 
 app.UseCors(options =>

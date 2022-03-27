@@ -16,14 +16,6 @@ namespace Dynastic.Infrastructure.Persistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Person>()
-                .HasMany(p => p.FathersChildren)
-                .WithOne(p => p.Father)
-                .HasForeignKey(p => p.FatherId);
-            modelBuilder.Entity<Person>()
-                .HasMany(p => p.MothersChildren)
-                .WithOne(p => p.Mother)
-                .HasForeignKey(p => p.MotherId);
             modelBuilder.Entity<Relationship>()
                 .HasKey(e => new
                 {
@@ -34,15 +26,23 @@ namespace Dynastic.Infrastructure.Persistence
                 .HasOne(p => p.Partner)
                 .WithMany()
                 .HasForeignKey(e => e.PartnerId);
-            modelBuilder.Entity<Relationship>()
-                .HasOne(p => p.Person)
-                .WithMany(p => p.Relationships)
-                .HasForeignKey(e => e.PersonId);
+            modelBuilder.Entity<Person>()
+                .HasOne(p => p.Father)
+                .WithOne();
+            modelBuilder.Entity<Person>()
+                .HasOne(p => p.Mother)
+                .WithOne();
             modelBuilder.Entity<UserDynasty>()
                 .HasKey(ud => new
                 {
                     UserId = ud.UserId,
                     DynastyId = ud.DynastyId
+                });
+            modelBuilder.Entity<ChildRelationship>()
+                .HasKey(cr => new
+                {
+                    ChildId = cr.ChildId,
+                    RelationshipId = cr.RelationshipId
                 });
         }
 

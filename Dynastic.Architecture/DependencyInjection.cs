@@ -15,7 +15,7 @@ namespace Dynastic.Infrastructure
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase("DynasticDb"));
-            services.AddTransient<ApplicationDbContext>();
+            services.AddScoped<ApplicationDbContext>();
             return services;
         }
     }

@@ -17,20 +17,6 @@ namespace Dynastic.Domain.Entities
         public Person? Father { get; set; }
         public Guid? FatherId { get; set; }
         public DateTime? BirthDate { get; set; }
-        public List<Relationship> Relationships { get; set; }
-
-        protected virtual List<Person> MothersChildren { get; set; }
-        protected virtual List<Person> FathersChildren { get; set; }
-        
-        [NotMapped]
-        public List<Guid> Children => CombineChildren();
-
-        private List<Guid> CombineChildren()
-        {
-            var list = new List<Person>();
-            list.AddRange(MothersChildren ?? new List<Person>());
-            list.AddRange(FathersChildren ?? new List<Person>());
-            return list.Select(l => l.Id).ToList();
-        }
+        public ICollection<ChildRelationship> Relationships { get; set; }
     }
 }
