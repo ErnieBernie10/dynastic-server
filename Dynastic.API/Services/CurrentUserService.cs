@@ -1,4 +1,5 @@
-﻿using Dynastic.Domain.Interface;
+﻿
+using Dynastic.Domain.Common.Interfaces;
 
 namespace Dynastic.API.Services
 {

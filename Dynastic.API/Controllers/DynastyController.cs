@@ -18,7 +18,7 @@ namespace Dynastic.API.Controllers
         }
 
         // GET api/<DynastyController>/5
-        [HttpGet("{id}")]
+        [HttpGet("{Id}")]
         public async Task<Dynasty> Get([FromRoute] GetDynastyByIdQuery query)
         {
             return await Mediator.Send(query);

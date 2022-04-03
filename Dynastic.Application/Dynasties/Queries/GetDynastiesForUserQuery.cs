@@ -1,5 +1,5 @@
-﻿using Dynastic.Domain.Entities;
-using Dynastic.Infrastructure.Persistence;
+﻿using Dynastic.Application.Common.Interfaces;
+using Dynastic.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -17,8 +17,8 @@ namespace Dynastic.Application.Dynasties.Queries
 
     public class GetDynastiesForUserQueryHandler : IRequestHandler<GetDynastiesForUserQuery, List<Dynasty>>
     {
-        private readonly ApplicationDbContext _context;
-        public GetDynastiesForUserQueryHandler(ApplicationDbContext context)
+        private readonly IApplicationDbContext _context;
+        public GetDynastiesForUserQueryHandler(IApplicationDbContext context)
         {
             _context = context;
         }

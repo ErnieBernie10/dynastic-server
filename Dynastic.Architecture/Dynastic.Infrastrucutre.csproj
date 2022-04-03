@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Dynastic.Application\Dynastic.Application.csproj" />
     <ProjectReference Include="..\Dynastic.Domain\Dynastic.Domain.csproj" />
   </ItemGroup>
 

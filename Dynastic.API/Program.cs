@@ -5,8 +5,9 @@ using Dynastic.Infrastructure;
 using Dynastic.Application;
 using Dynastic.Infrastructure.Persistence;
 using Dynastic.Infrastrucutre.Persistence;
-using Dynastic.Domain.Interface;
 using Dynastic.API.Services;
+using Dynastic.Domain.Common.Interfaces;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 var authority = builder.Configuration["Auth0:Authority"];
 var audience = builder.Configuration["Auth0:Audience"];
+var clientId = builder.Configuration["Auth0:ClientId"];
 
 builder.Services.AddAuthentication(options =>
 {
@@ -38,7 +40,29 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.OAuth2,
+        Flows = new OpenApiOAuthFlows
+        {
+            Implicit = new OpenApiOAuthFlow
+            {
+                AuthorizationUrl = new Uri(authority + "/authorize?audience=" + audience),
+                Scopes = new Dictionary<string, string>
+                {
+                    { "openid", "Open Id" },
+                    { "email", "Email" },
+                    { "profile", "Profile" },
+                }
+            }
+        }
+    });
+    options.OperationFilter<SecurityRequirementsOperationFilter>();
+});
 
 var app = builder.Build();
 
@@ -46,7 +70,11 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "API");
+        options.OAuthClientId(clientId);
+    });
     var scope = app.Services.CreateScope();
     var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     await ApplicationDbContextSeed.SeedSampleDataAsync(context);

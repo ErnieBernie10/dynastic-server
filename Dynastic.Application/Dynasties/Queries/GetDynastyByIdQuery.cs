@@ -1,6 +1,6 @@
-﻿using Dynastic.Domain.Entities;
-using Dynastic.Domain.Interface;
-using Dynastic.Infrastructure.Persistence;
+﻿using Dynastic.Application.Common.Interfaces;
+using Dynastic.Domain.Common.Interfaces;
+using Dynastic.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -18,10 +18,10 @@ namespace Dynastic.Application.Dynasties.Queries
 
     public class GetDynastyByIdQueryHandler : IRequestHandler<GetDynastyByIdQuery, Dynasty>
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IApplicationDbContext _context;
         private readonly ICurrentUserService _currentUserService;
 
-        public GetDynastyByIdQueryHandler(ApplicationDbContext context, ICurrentUserService currentUserService)
+        public GetDynastyByIdQueryHandler(IApplicationDbContext context, ICurrentUserService currentUserService)
         {
             _context = context;
             _currentUserService = currentUserService;

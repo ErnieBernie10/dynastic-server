@@ -1,4 +1,5 @@
-﻿using Dynastic.Infrastructure.Persistence;
+﻿using Dynastic.Application.Common.Interfaces;
+using Dynastic.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,8 +15,8 @@ namespace Dynastic.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase("DynasticDb"));
-            services.AddScoped<ApplicationDbContext>();
+            services.AddDbContext<IApplicationDbContext, ApplicationDbContext>(options => options.UseInMemoryDatabase("DynasticDb"));
+            services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
             return services;
         }
     }

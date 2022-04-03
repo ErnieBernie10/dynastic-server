@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dynastic.Domain.Interface
+namespace Dynastic.Domain.Common.Interfaces
 {
     public interface ICurrentUserService
     {
