@@ -6,13 +6,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dynastic.Application.Common.Interfaces
+namespace Dynastic.Application.Common.Interfaces;
+
+public interface IApplicationDbContext
 {
-    public interface IApplicationDbContext
-    {
-        public DbSet<Person> Persons { get; set; }
-        public DbSet<Dynasty> Dynasties { get; set; }
-        public DbSet<Relationship> Relationships { get; set; }
-        public DbSet<UserDynasty> UserDynasties { get; set; }
-    }
+    public DbSet<Person> Persons { get; }
+    public DbSet<Dynasty> Dynasties { get; }
+    public DbSet<Relationship> Relationships { get; }
+    public DbSet<UserDynasty> UserDynasties { get; }
+
+    public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

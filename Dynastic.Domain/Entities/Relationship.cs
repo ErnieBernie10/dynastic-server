@@ -4,14 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dynastic.Domain.Entities
+namespace Dynastic.Domain.Entities;
+
+public class Relationship : Base
 {
-    public class Relationship : Base
-    {
-        public Person Person { get; set; }
-        public Guid PersonId { get; set; }
-        public Person? Partner { get; set; }
-        public Guid? PartnerId { get; set; }
-        public ICollection<ChildRelationship> Children { get; set; }
-    }
+    public Person? Person { get; set; }
+    public Guid PersonId { get; set; }
+    public Person? Partner { get; set; }
+    public Guid? PartnerId { get; set; }
+    public ICollection<ChildRelationship>? Children { get; set; }
 }

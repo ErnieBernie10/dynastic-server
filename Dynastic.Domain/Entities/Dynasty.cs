@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dynastic.Domain.Entities
+namespace Dynastic.Domain.Entities;
+
+public class Dynasty : Base
 {
-    public class Dynasty : Base
-    {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public List<Person> Members { get; set; }
-    }
+    public string? Name { get; set; }
+    public string? Description { get; set; }
+    public List<Person>? Members { get; set; }
 }

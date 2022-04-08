@@ -9,15 +9,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dynastic.Infrastructure
+namespace Dynastic.Infrastructure;
+
+public static class DependencyInjection
 {
-    public static class DependencyInjection
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services)
-        {
-            services.AddDbContext<IApplicationDbContext, ApplicationDbContext>(options => options.UseInMemoryDatabase("DynasticDb"));
-            services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
-            return services;
-        }
+        services.AddDbContext<IApplicationDbContext, ApplicationDbContext>(options => options.UseInMemoryDatabase("DynasticDb"));
+        services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
+        return services;
     }
 }

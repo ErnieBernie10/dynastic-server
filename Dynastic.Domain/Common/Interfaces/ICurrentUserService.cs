@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dynastic.Domain.Common.Interfaces
+namespace Dynastic.Domain.Common.Interfaces;
+
+public interface ICurrentUserService
 {
-    public interface ICurrentUserService
-    {
-        string? UserId { get; }
-    }
+    string UserId { get; }
 }

@@ -3,14 +3,13 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Dynastic.API.Controllers
+namespace Dynastic.API.Controllers;
+
+public class WeatherForecastController : ApiControllerBase<WeatherForecastController>
 {
-    public class WeatherForecastController : ApiControllerBase<WeatherForecastController>
+    [HttpGet(Name = "GetWeatherForecast")]
+    public async Task<ActionResult<List<WeatherForecast>>> Get([FromQuery] GetWeatherForecastsQuery query)
     {
-        [HttpGet(Name = "GetWeatherForecast")]
-        public async Task<ActionResult<List<WeatherForecast>>> Get([FromQuery] GetWeatherForecastsQuery query)
-        {
-            return Ok(await Mediator.Send(query));
-        }
+        return Ok(await Mediator.Send(query));
     }
 }
