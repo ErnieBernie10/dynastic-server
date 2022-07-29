@@ -28,16 +28,13 @@ public class AddDynastyCommandHandler : IRequestHandler<AddDynastyCommand, Guid>
     }
     public async Task<Guid> Handle(AddDynastyCommand request, CancellationToken cancellationToken)
     {
-        var entity = await context.UserDynasties.AddAsync(new UserDynasty
+        var entity = await context.Dynasties.AddAsync(new Dynasty
         {
-            Dynasty = new Dynasty
-            {
-                Name = request.Name,
-                Description = request.Description,
-            },
+            Name = request.Name,
+            Description = request.Description,
             UserId = currentUserService.UserId
         }, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
-        return entity.Entity.Dynasty!.Id;
+        return entity.Entity.Id;
     }
 }

@@ -11,6 +11,8 @@ public static class DynastyFactory
 {
     public static Dynasty Generate() => new()
     {
+        Id = Guid.NewGuid(),
+        UserId = "auth0|623eef5eace84900685371a0",
         CreatedAt = DateTime.Now,
         ModifiedAt = DateTime.Now,
         Description = Faker.Lorem.Paragraph(),

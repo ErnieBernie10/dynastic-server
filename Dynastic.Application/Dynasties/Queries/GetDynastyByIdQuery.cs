@@ -30,12 +30,7 @@ public class GetDynastyByIdQueryHandler : IRequestHandler<GetDynastyByIdQuery, D
 
     public async Task<Dynasty> Handle(GetDynastyByIdQuery request, CancellationToken cancellationToken)
     {
-        var ud = await _context.UserDynasties
-            .Where(u => _currentUserService.UserId.Equals(u.UserId) && u.DynastyId.Equals(request.Id))
-            .Include(ud => ud.Dynasty)
-            .ThenInclude(d => d!.Members)
-            .FirstOrDefaultAsync(cancellationToken);
-
-        return ud?.Dynasty is null ? throw new NotFoundException(nameof(Dynasty), request.Id.ToString()) : ud.Dynasty;
+        var dynasty = await _context.Dynasties.FirstOrDefaultAsync(d => d.Id.Equals(request.Id));
+        return dynasty is null ? throw new NotFoundException(nameof(Dynasty), request.Id.ToString()) : dynasty;
     }
 }

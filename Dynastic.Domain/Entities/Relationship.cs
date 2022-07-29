@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace Dynastic.Domain.Entities;
 
-public class Relationship : Base
+public class Relationship
 {
-    public Person? Person { get; set; }
     public Guid PersonId { get; set; }
-    public Person? Partner { get; set; }
     public Guid? PartnerId { get; set; }
-    public ICollection<ChildRelationship>? Children { get; set; }
+    public List<string>? Children { get; set; }
 }

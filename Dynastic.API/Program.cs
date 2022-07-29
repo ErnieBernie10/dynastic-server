@@ -8,6 +8,7 @@ using Dynastic.Infrastrucutre.Persistence;
 using Dynastic.API.Services;
 using Dynastic.Domain.Common.Interfaces;
 using Microsoft.OpenApi.Models;
+using Dynastic.Architecture.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,12 +18,10 @@ var authority = builder.Configuration["Auth0:Authority"];
 var audience = builder.Configuration["Auth0:Audience"];
 var clientId = builder.Configuration["Auth0:ClientId"];
 
-builder.Services.AddAuthentication(options =>
-{
+builder.Services.AddAuthentication(options => {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options =>
-{
+}).AddJwtBearer(options => {
     options.Authority = authority;
     options.Audience = audience;
     options.TokenValidationParameters = new TokenValidationParameters
@@ -31,7 +30,13 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-builder.Services.AddInfrastructure();
+var cosmosDbConfig = new CosmosDbConfiguration();
+builder.Configuration.Bind("CosmosDb", cosmosDbConfig);
+builder.Services.AddSingleton(cosmosDbConfig);
+
+builder.Services.Configure<CosmosDbConfiguration>(builder.Configuration.GetSection("CosmosDb"));
+
+builder.Services.AddCloudInfrastructure(cosmosDbConfig);
 builder.Services.AddApplication();
 
 builder.Services.AddSingleton<ICurrentUserService, CurrentUserService>();
@@ -40,8 +45,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
+builder.Services.AddSwaggerGen(options => {
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -70,18 +74,19 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(options =>
-    {
+    app.UseSwaggerUI(options => {
         options.SwaggerEndpoint("/swagger/v1/swagger.json", "API");
         options.OAuthClientId(clientId);
     });
     var scope = app.Services.CreateScope();
     var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+    await context.Database.EnsureDeletedAsync();
+    await context.Database.EnsureCreatedAsync();
     await ApplicationDbContextSeed.SeedSampleDataAsync(context);
 }
 
-app.UseCors(options =>
-{
+app.UseCors(options => {
     options.AllowAnyHeader();
     options.AllowAnyMethod();
     options.AllowAnyOrigin();

@@ -19,9 +19,7 @@ public static class PersonFactory
             Firstname = Faker.Name.First(),
             Lastname = Faker.Name.Last(),
             Middlename = Faker.Name.Middle(),
-            Father = father,
             FatherId = father?.Id,
-            Mother = mother,
             MotherId = mother?.Id,
         };
     }
