@@ -34,6 +34,6 @@ public class GetPersonsByDynastyQueryHandler : IRequestHandler<GetPersonsByDynas
             .Where(d => d.UserId!.Equals(currentUserService.UserId) && d.Id.Equals(request.DynastyId))
             .FirstOrDefaultAsync();
 
-        return dynasty?.Members is null ? throw new NotFoundException(nameof(Dynasty), request.DynastyId.ToString()) : dynasty.Members;
+        return dynasty?.Members is null ? throw new NotFoundException(request.DynastyId.ToString(), nameof(Dynasty)) : dynasty.Members;
     }
 }

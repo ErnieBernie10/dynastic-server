@@ -17,10 +17,10 @@ public static class ApplicationDbContextSeed
     {
         if (await context.Dynasties.FirstOrDefaultAsync() is null)
         {
-            var dynasties = Enumerable.Range(2, 10).Select((_) => DynastyFactory.Generate());
+            // var dynasties = Enumerable.Range(2, 10).Select((_) => DynastyFactory.Generate());
 
-            context.Dynasties.AddRange(dynasties);
-            await context.SaveChangesAsync();
+            // context.Dynasties.AddRange(dynasties);
+            // await context.SaveChangesAsync();
         }
     }
 }
