@@ -7,11 +7,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json;
+using Microsoft.Extensions.Configuration;
 
 namespace Dynastic.Infrastructure.Persistence;
 
 public class ApplicationDbContext : DbContext, IApplicationDbContext
 {
+    public ApplicationDbContext(IConfiguration config)
+    {
+        var section = config.GetRequiredSection("CosmosDb");
+        DbContextOptions options = new DbContextOptionsBuilder()
+            .UseCosmos(section["EndpointUri"], section["PrimaryKey"], "Dynastic")
+            .Options;
+    }
+
     public ApplicationDbContext(DbContextOptions options) : base(options)
     {
     }
