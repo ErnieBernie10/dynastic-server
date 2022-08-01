@@ -70,6 +70,9 @@ builder.Services.AddSwaggerGen(options => {
 
 var app = builder.Build();
 
+var scope = app.Services.CreateScope();
+var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -78,13 +81,18 @@ if (app.Environment.IsDevelopment())
         options.SwaggerEndpoint("/swagger/v1/swagger.json", "API");
         options.OAuthClientId(clientId);
     });
-    var scope = app.Services.CreateScope();
-    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
     await context.Database.EnsureDeletedAsync();
     await context.Database.EnsureCreatedAsync();
     await ApplicationDbContextSeed.SeedSampleDataAsync(context);
 }
+await context.Database.EnsureCreatedAsync();
+// TODO: Only run this in some test env. But for now testing in Prod env!
+app.UseSwagger();
+app.UseSwaggerUI(options => {
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "API");
+    options.OAuthClientId(clientId);
+});
 
 app.UseCors(options => {
     options.AllowAnyHeader();
