@@ -2,6 +2,7 @@
 using Dynastic.Domain.Entities;
 using Dynastic.Infrastructure.Persistence;
 using Dynastic.Infrastrucutre.Seed.Factories;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,16 +15,12 @@ public static class ApplicationDbContextSeed
 {
     public static async Task SeedSampleDataAsync(ApplicationDbContext context)
     {
-        if (!context.Dynasties.Any())
+        if (await context.Dynasties.FirstOrDefaultAsync() is null)
         {
-            var dynasties = Enumerable.Range(2, 10).Select((_) => new UserDynasty
-            {
-                UserId = "auth0|623eef5eace84900685371a0",
-                Dynasty = DynastyFactory.Generate(),
-            });
+            // var dynasties = Enumerable.Range(2, 10).Select((_) => DynastyFactory.Generate());
 
-            context.UserDynasties.AddRange(dynasties);
-            await context.SaveChangesAsync();
+            // context.Dynasties.AddRange(dynasties);
+            // await context.SaveChangesAsync();
         }
     }
 }

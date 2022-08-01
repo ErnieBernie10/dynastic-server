@@ -1,4 +1,5 @@
-﻿using Dynastic.Application.Common.Interfaces;
+﻿using Ardalis.GuardClauses;
+using Dynastic.Application.Common.Interfaces;
 using Dynastic.Domain.Common.Interfaces;
 using Dynastic.Domain.Entities;
 using MediatR;
@@ -29,11 +30,10 @@ public class GetPersonsByDynastyQueryHandler : IRequestHandler<GetPersonsByDynas
 
     public async Task<List<Person>> Handle(GetPersonsByDynastyQuery request, CancellationToken cancellationToken)
     {
-        var ud = await context.UserDynasties
-            .Where(u =>currentUserService.UserId.Equals(u.UserId) && u.DynastyId.Equals(request.DynastyId))
-            .Include(ud => ud.Dynasty)
-            .ThenInclude(d => d!.Members)
-            .FirstOrDefaultAsync(cancellationToken);
-        return ud!.Dynasty!.Members!;
+        var dynasty = await context.Dynasties
+            .Where(d => d.UserId!.Equals(currentUserService.UserId) && d.Id.Equals(request.DynastyId))
+            .FirstOrDefaultAsync();
+
+        return dynasty?.Members is null ? throw new NotFoundException(request.DynastyId.ToString(), nameof(Dynasty)) : dynasty.Members;
     }
 }

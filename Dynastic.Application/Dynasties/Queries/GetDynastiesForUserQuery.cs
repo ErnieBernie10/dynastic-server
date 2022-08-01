@@ -26,10 +26,9 @@ public class GetDynastiesForUserQueryHandler : IRequestHandler<GetDynastiesForUs
     }
     public async Task<List<Dynasty>> Handle(GetDynastiesForUserQuery request, CancellationToken cancellationToken)
     {
-        return await _context.UserDynasties
-            .Where(d => currentUserService.UserId.Equals(d.UserId))
-            .Include(d => d.Dynasty)
-            .Select(d => d.Dynasty!)
-            .ToListAsync(cancellationToken);
+        var currentUserId = currentUserService.UserId.ToString();
+        return await _context.Dynasties
+            .Where(d => d.UserId!.Equals(currentUserId))
+            .ToListAsync();
     }
 }
