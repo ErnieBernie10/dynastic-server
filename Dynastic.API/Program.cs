@@ -82,17 +82,20 @@ if (app.Environment.IsDevelopment())
         options.OAuthClientId(clientId);
     });
 
-    await context.Database.EnsureDeletedAsync();
-    await context.Database.EnsureCreatedAsync();
-    await ApplicationDbContextSeed.SeedSampleDataAsync(context);
+    // await context.Database.EnsureDeletedAsync();
+    // await context.Database.EnsureCreatedAsync();
+    // await ApplicationDbContextSeed.SeedSampleDataAsync(context);
 }
-await context.Database.EnsureCreatedAsync();
-// TODO: Only run this in some test env. But for now testing in Prod env!
-app.UseSwagger();
-app.UseSwaggerUI(options => {
-    options.SwaggerEndpoint("/swagger/v1/swagger.json", "API");
-    options.OAuthClientId(clientId);
-});
+else
+{
+    await context.Database.EnsureCreatedAsync();
+    // TODO: Only run this in some test env. But for now testing in Prod env!
+    app.UseSwagger();
+    app.UseSwaggerUI(options => {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "API");
+        options.OAuthClientId(clientId);
+    });
+}
 
 app.UseCors(options => {
     options.AllowAnyHeader();
