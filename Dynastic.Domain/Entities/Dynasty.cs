@@ -10,6 +10,13 @@ public class Dynasty : Base
 {
     public string? Name { get; set; }
     public string? Description { get; set; }
-    public List<Person> Members { get; set; } = new List<Person>();
-    public string? UserId { get; set; }
+    public List<Person> Members { get; set; } = new();
+    public DynastyOwnershipProperties OwnershipProperties { get; set; }
+}
+
+public class DynastyOwnershipProperties
+{
+    public string? OwnerUserId { get; set; }
+    public List<string> Members { get; set; } = new();
+
 }

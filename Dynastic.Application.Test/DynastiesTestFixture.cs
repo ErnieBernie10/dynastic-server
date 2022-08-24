@@ -1,4 +1,5 @@
 using Dynastic.Application.Common.Interfaces;
+using Dynastic.Application.Common.Services;
 using Dynastic.Architecture.Configuration;
 using Dynastic.Domain.Common.Interfaces;
 using Dynastic.Infrastructure.Persistence;
@@ -19,8 +20,9 @@ public class CurrentUserService : ICurrentUserService
 
 public class DynastiesTestFixture : IDisposable, IAsyncLifetime
 {
-    public ApplicationDbContext context;
-    public ICurrentUserService currentUserService = new CurrentUserService();
+    public ApplicationDbContext Context;
+    public ICurrentUserService CurrentUserService = new CurrentUserService();
+    public IAccessService AccessService;
 
     public void Dispose()
     {
@@ -28,11 +30,12 @@ public class DynastiesTestFixture : IDisposable, IAsyncLifetime
 
     public async Task DisposeAsync()
     {
-        await context.Database.EnsureDeletedAsync();
+        await Context.Database.EnsureDeletedAsync();
     }
 
     public async Task InitializeAsync()
     {
+        AccessService = new AccessService(CurrentUserService);
         var config = new ConfigurationBuilder()
             .AddJsonFile(@"appsettings.Development.json")
             .Build();
@@ -41,9 +44,9 @@ public class DynastiesTestFixture : IDisposable, IAsyncLifetime
         var options = new DbContextOptionsBuilder<ApplicationDbContext>()
             .UseCosmos(cosmosDbConfig.EndpointUri, cosmosDbConfig.PrimaryKey, "Dynastic")
             .Options;
-        context = new ApplicationDbContext(options);
+        Context = new ApplicationDbContext(options);
 
-        await context.Database.EnsureDeletedAsync();
-        await context.Database.EnsureCreatedAsync();
+        await Context.Database.EnsureDeletedAsync();
+        await Context.Database.EnsureCreatedAsync();
     }
 }

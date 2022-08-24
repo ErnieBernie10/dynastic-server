@@ -19,21 +19,21 @@ public class GetPersonsByDynastyQuery : IRequest<List<Person>>
 
 public class GetPersonsByDynastyQueryHandler : IRequestHandler<GetPersonsByDynastyQuery, List<Person>>
 {
-    private readonly IApplicationDbContext context;
-    private readonly ICurrentUserService currentUserService;
+    private readonly IApplicationDbContext _context;
+    private readonly IAccessService _accessService;
 
-    public GetPersonsByDynastyQueryHandler(IApplicationDbContext context, ICurrentUserService currentUserService)
+    public GetPersonsByDynastyQueryHandler(IApplicationDbContext context, IAccessService accessService)
     {
-        this.context = context;
-        this.currentUserService = currentUserService;
+        this._context = context;
+        _accessService = accessService;
     }
 
     public async Task<List<Person>> Handle(GetPersonsByDynastyQuery request, CancellationToken cancellationToken)
     {
-        var dynasty = await context.Dynasties
-            .Where(d => d.UserId!.Equals(currentUserService.UserId) && d.Id.Equals(request.DynastyId))
-            .FirstOrDefaultAsync();
+        var dynasty = await _accessService.FilterUserDynasties(_context.Dynasties)
+            .Where(d => d.Id.Equals(request.DynastyId))
+            .FirstOrDefaultAsync(cancellationToken: cancellationToken);
 
-        return dynasty?.Members is null ? throw new NotFoundException(request.DynastyId.ToString(), nameof(Dynasty)) : dynasty.Members;
+        return dynasty?.Members ?? throw new NotFoundException(request.DynastyId.ToString(), nameof(Dynasty));
     }
 }

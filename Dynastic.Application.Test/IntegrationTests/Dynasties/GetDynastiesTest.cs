@@ -9,18 +9,16 @@ namespace Dynastic.Application.Test.IntegrationTests.Dynasties
 {
     public class GetDynastiesTest : DynastiesTestFixture
     {
-
         [Fact]
         async Task GetDynasties_ShouldReturnSomeDynasties_WhenUserHasDynasties()
         {
-            await context.AddAsync(new Dynasty
-            {
+            await Context.AddAsync(new Dynasty {
                 Name = "Doe",
-                UserId = currentUserService.UserId
+                OwnershipProperties = new DynastyOwnershipProperties() { OwnerUserId = CurrentUserService.UserId }
             });
-            await context.SaveChangesAsync();
+            await Context.SaveChangesAsync();
 
-            var query = new GetDynastiesForUserQueryHandler(context, currentUserService);
+            var query = new GetDynastiesForUserQueryHandler(Context, AccessService);
             var result = await query.Handle(new GetDynastiesForUserQuery(), CancellationToken.None);
             Assert.NotNull(result);
             Assert.NotEmpty(result);

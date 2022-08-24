@@ -20,17 +20,18 @@ public class GetDynastyByIdQuery : IRequest<Dynasty>
 public class GetDynastyByIdQueryHandler : IRequestHandler<GetDynastyByIdQuery, Dynasty>
 {
     private readonly IApplicationDbContext _context;
-    private readonly ICurrentUserService _currentUserService;
+    private readonly IAccessService _accessService;
 
-    public GetDynastyByIdQueryHandler(IApplicationDbContext context, ICurrentUserService currentUserService)
+    public GetDynastyByIdQueryHandler(IApplicationDbContext context, ICurrentUserService currentUserService, IAccessService accessService)
     {
         _context = context;
-        _currentUserService = currentUserService;
+        _accessService = accessService;
     }
 
     public async Task<Dynasty> Handle(GetDynastyByIdQuery request, CancellationToken cancellationToken)
     {
-        var dynasty = await _context.Dynasties.FirstOrDefaultAsync(d => d.Id.Equals(request.Id));
-        return dynasty is null ? throw new NotFoundException(nameof(Dynasty), request.Id.ToString()) : dynasty;
+        var dynasty = await _accessService.FilterUserDynasties(_context.Dynasties)
+            .FirstOrDefaultAsync(d => d.Id.Equals(request.Id), cancellationToken: cancellationToken);
+        return dynasty ?? throw new NotFoundException(nameof(Dynasty), request.Id.ToString());
     }
 }

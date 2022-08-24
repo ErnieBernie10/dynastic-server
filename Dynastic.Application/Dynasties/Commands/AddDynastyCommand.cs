@@ -18,23 +18,24 @@ public class AddDynastyCommand : IRequest<Guid>
 
 public class AddDynastyCommandHandler : IRequestHandler<AddDynastyCommand, Guid>
 {
-    private IApplicationDbContext context;
-    private ICurrentUserService currentUserService;
+    private readonly IApplicationDbContext _context;
+    private readonly ICurrentUserService _currentUserService;
 
     public AddDynastyCommandHandler(IApplicationDbContext context, ICurrentUserService currentUserService)
     {
-        this.context = context;
-        this.currentUserService = currentUserService;
+        this._context = context;
+        this._currentUserService = currentUserService;
     }
+
     public async Task<Guid> Handle(AddDynastyCommand request, CancellationToken cancellationToken)
     {
-        var entity = await context.Dynasties.AddAsync(new Dynasty
-        {
-            Name = request.Name,
-            Description = request.Description,
-            UserId = currentUserService.UserId
-        }, cancellationToken);
-        await context.SaveChangesAsync(cancellationToken);
+        var entity = await _context.Dynasties.AddAsync(
+            new Dynasty {
+                Name = request.Name,
+                Description = request.Description,
+                OwnershipProperties = new DynastyOwnershipProperties() { OwnerUserId = _currentUserService.UserId }
+            }, cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
         return entity.Entity.Id;
     }
 }

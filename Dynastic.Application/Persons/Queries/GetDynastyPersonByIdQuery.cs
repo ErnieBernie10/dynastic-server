@@ -19,22 +19,22 @@ public class GetDynastyPersonByIdQuery : IRequest<Person>
 
 public class GetDynastyPersonByIdQueryHandler : IRequestHandler<GetDynastyPersonByIdQuery, Person>
 {
-    private readonly IApplicationDbContext context;
-    private readonly ICurrentUserService currentUserService;
+    private readonly IApplicationDbContext _context;
+    private readonly IAccessService _accessService;
 
-    public GetDynastyPersonByIdQueryHandler(IApplicationDbContext context, ICurrentUserService currentUserService)
+    public GetDynastyPersonByIdQueryHandler(IApplicationDbContext context, IAccessService accessService)
     {
-        this.context = context;
-        this.currentUserService = currentUserService;
+        this._context = context;
+        _accessService = accessService;
     }
 
     public async Task<Person> Handle(GetDynastyPersonByIdQuery request, CancellationToken cancellationToken)
     {
-        var dynasty = await context.Dynasties
-            .Where(d => d.UserId!.Equals(currentUserService.UserId))
+        var dynasty = await _accessService.FilterUserDynasties(_context.Dynasties)
             .Where(d => d.Id.Equals(request.DynastyId))
-            .ToListAsync();
-        var person = dynasty.Select(d => d.Members.FirstOrDefault(m => m.Id.Equals(request.Id)))
+            .ToListAsync(cancellationToken: cancellationToken);
+        var person = dynasty
+            .Select(d => d.Members.FirstOrDefault(m => m.Id.Equals(request.Id)))
             .FirstOrDefault();
         if (person is null) {
             throw new NotFoundException(request.Id.ToString(), nameof(Person));

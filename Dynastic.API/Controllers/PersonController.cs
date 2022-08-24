@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dynastic.API.Controllers;
 
-[Route("api/Dynasty/{DynastyId}/[controller]")]
+[Route("api/Dynasty/{DynastyId:guid}/[controller]")]
 [Authorize]
 public class PersonController : ApiControllerBase<PersonController>
 {
@@ -21,7 +21,7 @@ public class PersonController : ApiControllerBase<PersonController>
     }
 
     // GET api/<PersonController>/5
-    [HttpGet("{Id}")]
+    [HttpGet("{Id:guid}")]
     public async Task<ActionResult<Person>> Get([FromRoute] GetDynastyPersonByIdQuery request)
     {
         return await Mediator.Send(request);
@@ -29,12 +29,11 @@ public class PersonController : ApiControllerBase<PersonController>
 
     // POST api/<PersonController>
     [HttpPost]
-    public async Task<ActionResult<Guid>> Post(Guid DynastyId, [FromBody] AddPersonToDynastyBody body)
+    public async Task<ActionResult<Guid>> Post(Guid dynastyId, [FromBody] AddPersonToDynastyBody body)
     {
         var command = body.Adapt<AddPersonToDynastyCommand>();
-        command.DynastyId = DynastyId;
+        command.DynastyId = dynastyId;
         return await Mediator.Send(command);
-
     }
 
     // PUT api/<PersonController>/5

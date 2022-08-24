@@ -30,35 +30,36 @@ public class AddPersonToDynastyCommand : AddPersonToDynastyBody, IRequest<Guid>
 
 public class AddPersonToDynastyCommandHandler : IRequestHandler<AddPersonToDynastyCommand, Guid>
 {
-    private readonly IApplicationDbContext context;
-    private readonly ICurrentUserService currentUserService;
+    private readonly IApplicationDbContext _context;
+    private readonly IAccessService _accessService;
 
-    public AddPersonToDynastyCommandHandler(ICurrentUserService currentUserService, IApplicationDbContext context)
+    public AddPersonToDynastyCommandHandler(IApplicationDbContext context, IAccessService accessService)
     {
-        this.context = context;
-        this.currentUserService = currentUserService;
+        this._context = context;
+        _accessService = accessService;
     }
 
     public async Task<Guid> Handle(AddPersonToDynastyCommand request, CancellationToken cancellationToken)
     {
-        var dynasty = await context.Dynasties
-            .Where(d => d.UserId!.Equals(currentUserService.UserId) && d.Id.Equals(request.DynastyId))
-            .FirstOrDefaultAsync();
+        var dynasty = await _accessService.FilterUserDynasties(_context.Dynasties)
+            .Where(d => d.Id.Equals(request.DynastyId))
+            .FirstOrDefaultAsync(cancellationToken: cancellationToken);
         if (dynasty is null)
         {
             throw new NotFoundException(request.DynastyId.ToString(), nameof(Dynasty));
         }
-        dynasty.Members!.Add(new Person
-        {
+
+        var person = new Person {
             Firstname = request.Firstname,
             Middlename = request.Middlename,
             Lastname = request.Lastname,
             FatherId = request.FatherId,
             MotherId = request.MotherId,
             BirthDate = request.BirthDate,
-        });
-        var updated = context.Dynasties.Update(dynasty);
-        await context.SaveChangesAsync();
-        return updated.Entity.Id;
+        };
+        dynasty.Members!.Add(person);
+        var updated = _context.Dynasties.Update(dynasty);
+        await _context.SaveChangesAsync(cancellationToken);
+        return person.Id;
     }
 }

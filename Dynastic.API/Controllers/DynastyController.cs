@@ -32,6 +32,13 @@ public class DynastyController : ApiControllerBase<DynastyController>
         return await Mediator.Send(command);
     }
 
+    // POST api/<DynastyController>
+    [HttpPut]
+    public async Task<Guid> UploadCoa(Guid dynastyId, [FromBody] AddDynastyCoaCommand command)
+    {
+        return await Mediator.Send(command);
+    }
+
     // PUT api/<DynastyController>/5
     [HttpPut("{id}")]
     public void Put(int id, [FromBody] string value)
