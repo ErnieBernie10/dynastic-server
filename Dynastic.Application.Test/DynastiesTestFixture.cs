@@ -35,9 +35,20 @@ public class DynastiesTestFixture : IDisposable, IAsyncLifetime
 
     public async Task InitializeAsync()
     {
+        InitializeServices();
+        // This uses a real cosmosdb instance running in the cloud.
+        await InitializeCosmosDbAsync();
+    }
+
+    private void InitializeServices()
+    {
         AccessService = new AccessService(CurrentUserService);
+    }
+
+    private async Task InitializeCosmosDbAsync()
+    {
         var config = new ConfigurationBuilder()
-            .AddJsonFile(@"appsettings.Development.json")
+            .AddJsonFile(@"appsettings.Test.json")
             .Build();
         var cosmosDbConfig = new CosmosDbConfiguration();
         config.Bind("CosmosDb", cosmosDbConfig);

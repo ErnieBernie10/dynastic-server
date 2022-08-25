@@ -11,7 +11,6 @@ public class AccessService : IAccessService
     public AccessService(ICurrentUserService currentUserService)
     {
         _currentUserService = currentUserService;
-        var currentUserId = _currentUserService.UserId;
     }
 
     private readonly ICurrentUserService _currentUserService;
@@ -26,8 +25,6 @@ public class AccessService : IAccessService
     public IQueryable<Dynasty> FilterUserDynasties(DbSet<Dynasty> dynasties)
     {
         // TODO: Refactor into some efcore expression once they support ARRAY_CONTAINS
-        return dynasties.FromSqlRaw(@"SELECT * FROM c
-        WHERE c.OwnershipProperties.OwnerUserId LIKE '{0}'
-        OR ARRAY_CONTAINS(c.OwnershipProperties.Members, '{0}')", _currentUserService.UserId);
+        return dynasties.FromSqlRaw("SELECT * FROM c WHERE c.OwnershipProperties.OwnerUserId LIKE {0} OR ARRAY_CONTAINS(c.OwnershipProperties.Members, {0})", _currentUserService.UserId);
     }
 }

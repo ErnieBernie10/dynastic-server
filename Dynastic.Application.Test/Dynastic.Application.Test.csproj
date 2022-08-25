@@ -11,8 +11,8 @@
   <ItemGroup>
     <PackageReference Include="EntityFramework" Version="6.4.4" />
     <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.29.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Cosmos" Version="6.0.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Cosmos" Version="6.0.8" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
@@ -31,7 +31,7 @@
     <ProjectReference Include="..\Dynastic.Application\Dynastic.Application.csproj" />
     <ProjectReference Include="..\Dynastic.Domain\Dynastic.Domain.csproj" />
     <ProjectReference Include="..\Dynastic.Architecture\Dynastic.Infrastrucutre.csproj" />
-    <Content Include=".\appsettings.Development.json">
+    <Content Include=".\appsettings.Test.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content> 
   </ItemGroup>

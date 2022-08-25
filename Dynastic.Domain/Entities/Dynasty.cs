@@ -16,6 +16,7 @@ public class Dynasty : Base
 
 public class DynastyOwnershipProperties
 {
+    public Guid Id { get; init; }
     public string? OwnerUserId { get; set; }
     public List<string> Members { get; set; } = new();
 
