@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dynastic.API", "Dynastic.AP
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dynastic.Domain", "Dynastic.Domain\Dynastic.Domain.csproj", "{A243CDDC-6337-4614-987A-4FBC66A4177A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dynastic.Infrastrucutre", "Dynastic.Architecture\Dynastic.Infrastrucutre.csproj", "{C0E244C4-D5FA-4674-8A05-B1B4349657AE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dynastic.Infrastructure", "Dynastic.Architecture\Dynastic.Infrastructure.csproj", "{C0E244C4-D5FA-4674-8A05-B1B4349657AE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dynastic.Application", "Dynastic.Application\Dynastic.Application.csproj", "{7BF19F2D-B182-4BB2-9A21-ECC229DD044F}"
 EndProject

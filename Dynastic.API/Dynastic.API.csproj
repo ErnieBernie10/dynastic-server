@@ -22,7 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Dynastic.Application\Dynastic.Application.csproj" />
-    <ProjectReference Include="..\Dynastic.Architecture\Dynastic.Infrastrucutre.csproj" />
+    <ProjectReference Include="..\Dynastic.Architecture\Dynastic.Infrastructure.csproj" />
     <ProjectReference Include="..\Dynastic.Domain\Dynastic.Domain.csproj" />
   </ItemGroup>
 

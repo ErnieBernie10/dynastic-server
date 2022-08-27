@@ -3,6 +3,7 @@ using Dynastic.Application.Common.Interfaces;
 using Dynastic.Domain.Common.Interfaces;
 using Dynastic.Domain.Entities;
 using MediatR;
+using Microsoft.Azure.Cosmos;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,8 @@ public class GetDynastyByIdQueryHandler : IRequestHandler<GetDynastyByIdQuery, D
     private readonly IApplicationDbContext _context;
     private readonly IAccessService _accessService;
 
-    public GetDynastyByIdQueryHandler(IApplicationDbContext context, ICurrentUserService currentUserService, IAccessService accessService)
+    public GetDynastyByIdQueryHandler(IApplicationDbContext context,
+        IAccessService accessService)
     {
         _context = context;
         _accessService = accessService;
@@ -32,6 +34,7 @@ public class GetDynastyByIdQueryHandler : IRequestHandler<GetDynastyByIdQuery, D
     {
         var dynasty = await _accessService.FilterUserDynasties(_context.Dynasties)
             .FirstOrDefaultAsync(d => d.Id.Equals(request.Id), cancellationToken: cancellationToken);
-        return dynasty ?? throw new NotFoundException(nameof(Dynasty), request.Id.ToString());
+
+        return dynasty ?? throw new NotFoundException(request.Id.ToString(), nameof(Dynasty));
     }
 }

@@ -30,7 +30,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Dynastic.Application\Dynastic.Application.csproj" />
     <ProjectReference Include="..\Dynastic.Domain\Dynastic.Domain.csproj" />
-    <ProjectReference Include="..\Dynastic.Architecture\Dynastic.Infrastrucutre.csproj" />
+    <ProjectReference Include="..\Dynastic.Architecture\Dynastic.Infrastructure.csproj" />
     <Content Include=".\appsettings.Test.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content> 

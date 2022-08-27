@@ -9,6 +9,7 @@ using Dynastic.API.Services;
 using Dynastic.Domain.Common.Interfaces;
 using Microsoft.OpenApi.Models;
 using Dynastic.Architecture.Configuration;
+using Dynastic.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -83,7 +84,7 @@ if (app.Environment.IsDevelopment())
     });
 
     // await context.Database.EnsureDeletedAsync();
-    // await context.Database.EnsureCreatedAsync();
+    await context.Database.EnsureCreatedAsync();
     // await ApplicationDbContextSeed.SeedSampleDataAsync(context);
 }
 else
@@ -102,6 +103,8 @@ app.UseCors(options => {
     options.AllowAnyMethod();
     options.AllowAnyOrigin();
 });
+
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 
