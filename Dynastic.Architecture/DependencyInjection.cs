@@ -1,5 +1,5 @@
 ﻿using Dynastic.Application.Common.Interfaces;
-using Dynastic.Architecture.Configuration;
+using Dynastic.Infrastructure.Configuration;
 using Dynastic.Infrastructure.Persistence;
 using Microsoft.Azure.Cosmos;
 using Microsoft.EntityFrameworkCore;

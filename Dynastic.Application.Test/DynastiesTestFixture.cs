@@ -1,7 +1,7 @@
 using Dynastic.Application.Common.Interfaces;
-using Dynastic.Application.Common.Services;
-using Dynastic.Architecture.Configuration;
+using Dynastic.Application.Services;
 using Dynastic.Domain.Common.Interfaces;
+using Dynastic.Infrastructure.Configuration;
 using Dynastic.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

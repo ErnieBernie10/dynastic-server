@@ -33,10 +33,15 @@ public class DynastyController : ApiControllerBase<DynastyController>
     }
 
     // POST api/<DynastyController>
-    [HttpPut]
-    public async Task<Guid> UploadCoa(Guid dynastyId, [FromBody] AddDynastyCoaCommand command)
+    [HttpPut("UploadCoaFile")]
+    public async Task<Guid> UploadCoa(Guid dynastyId, [FromForm] CoaFileCommand command)
     {
-        return await Mediator.Send(command);
+        if (command.Coa is null)
+        {
+            throw new BadHttpRequestException("Field coa does not contain an svg file");
+        }
+
+        return await Mediator.Send(new AddDynastyCoaFileCommand() { Coa = command.Coa, DynastyId = dynastyId });
     }
 
     // PUT api/<DynastyController>/5
