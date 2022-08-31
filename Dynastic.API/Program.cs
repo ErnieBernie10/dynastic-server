@@ -8,8 +8,10 @@ using Dynastic.Infrastrucutre.Persistence;
 using Dynastic.API.Services;
 using Dynastic.Domain.Common.Interfaces;
 using Microsoft.OpenApi.Models;
-using Dynastic.Architecture.Configuration;
 using Dynastic.API.Services;
+using Dynastic.Application.Common.Interfaces;
+using Dynastic.Infrastructure.Configuration;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,15 +27,17 @@ builder.Services.AddAuthentication(options => {
 }).AddJwtBearer(options => {
     options.Authority = authority;
     options.Audience = audience;
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        NameClaimType = ClaimTypes.NameIdentifier
-    };
+    options.TokenValidationParameters = new TokenValidationParameters { NameClaimType = ClaimTypes.NameIdentifier };
 });
 
 var cosmosDbConfig = new CosmosDbConfiguration();
 builder.Configuration.Bind("CosmosDb", cosmosDbConfig);
 builder.Services.AddSingleton(cosmosDbConfig);
+
+var fileStorageConfig = new FileStorageConfiguration(builder.Environment.IsDevelopment());
+builder.Configuration.Bind("AzureFileStorage", fileStorageConfig);
+builder.Services.AddSingleton<IFileStorageConfiguration>(fileStorageConfig);
+
 
 builder.Services.Configure<CosmosDbConfiguration>(builder.Configuration.GetSection("CosmosDb"));
 
@@ -47,29 +51,25 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options => {
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Name = "Authorization",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.OAuth2,
-        Flows = new OpenApiOAuthFlows
-        {
-            Implicit = new OpenApiOAuthFlow
-            {
-                AuthorizationUrl = new Uri(authority + "/authorize?audience=" + audience),
-                Scopes = new Dictionary<string, string>
-                {
-                    { "openid", "Open Id" },
-                    { "email", "Email" },
-                    { "profile", "Profile" },
+    options.AddSecurityDefinition("Bearer",
+        new OpenApiSecurityScheme {
+            Name = "Authorization",
+            In = ParameterLocation.Header,
+            Type = SecuritySchemeType.OAuth2,
+            Flows = new OpenApiOAuthFlows {
+                Implicit = new OpenApiOAuthFlow {
+                    AuthorizationUrl = new Uri(authority + "/authorize?audience=" + audience),
+                    Scopes = new Dictionary<string, string> {
+                        { "openid", "Open Id" }, { "email", "Email" }, { "profile", "Profile" },
+                    }
                 }
             }
-        }
-    });
+        });
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
 
 var app = builder.Build();
+
 
 var scope = app.Services.CreateScope();
 var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
@@ -113,5 +113,10 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseStaticFiles(new StaticFileOptions() {
+    FileProvider = new PhysicalFileProvider(fileStorageConfig.UserCoaEnvironmentPath()),
+    RequestPath = new PathString("/user-coa")
+});
 
 app.Run();

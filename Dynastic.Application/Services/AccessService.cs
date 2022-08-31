@@ -2,9 +2,8 @@ using Dynastic.Application.Common.Interfaces;
 using Dynastic.Domain.Common.Interfaces;
 using Dynastic.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 
-namespace Dynastic.Application.Common.Services;
+namespace Dynastic.Application.Services;
 
 public class AccessService : IAccessService
 {

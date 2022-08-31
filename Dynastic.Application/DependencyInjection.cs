@@ -1,5 +1,5 @@
 ﻿using Dynastic.Application.Common.Interfaces;
-using Dynastic.Application.Common.Services;
+using Dynastic.Application.Services;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
@@ -13,6 +13,7 @@ public static class DependencyInjection
         services.AddMediatR(Assembly.GetExecutingAssembly());
 
         services.AddSingleton<IAccessService, AccessService>();
+        services.AddSingleton<ICoaFileService, CoaFileService>();
         
         return services;
     }
