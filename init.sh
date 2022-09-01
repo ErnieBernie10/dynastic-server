@@ -1,2 +1,2 @@
 service ssh start
-dotnet DynasticAPI.dll
+dotnet Dynastic.API.dll
