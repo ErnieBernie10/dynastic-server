@@ -2,8 +2,12 @@
 
 # Install OpenSSH and set the password for root to "Docker!". In this example, "apk add" is the install instruction for an Alpine Linux-based image.
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
-RUN apk add openssh \
-     && echo "root:Docker!" | chpasswd 
+WORKDIR /app
+RUN apt-get update \
+      && apt-get install -y --no-install-recommends dialog \
+      && apt-get update \
+      && apt-get install -y --no-install-recommends openssh-server \
+      && echo "root:Docker!" | chpasswd 
 
 # Copy the sshd_config file to the /etc/ssh/ directory
 COPY sshd_config /etc/ssh/
@@ -17,7 +21,6 @@ RUN chmod +x /tmp/ssh_setup.sh \
 # Open port 2222 for SSH access
 EXPOSE 80 2222
 
-WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
