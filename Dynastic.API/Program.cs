@@ -104,7 +104,7 @@ app.UseCors(options => {
     options.AllowAnyOrigin();
 });
 
-app.UseMiddleware<ErrorHandlingMiddleware>();
+// app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 

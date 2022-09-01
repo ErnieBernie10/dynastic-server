@@ -5,4 +5,6 @@ namespace Dynastic.Application.Common.Interfaces;
 public interface ICoaFileService
 {
     Task UploadUserCoa(IFormFile requestCoa, Guid dynastyIc);
+
+    bool IsValidCoaSvg(Stream coaFileStream);
 }
