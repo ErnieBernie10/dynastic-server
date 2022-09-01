@@ -21,6 +21,7 @@ RUN chmod +x /tmp/ssh_setup.sh \
 # Open port 2222 for SSH access
 EXPOSE 80 2222
 
+WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
@@ -38,4 +39,5 @@ RUN dotnet publish "Dynastic.API.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Dynastic.API.dll"]
+
+ENTRYPOINT ["bash","init.sh"]
