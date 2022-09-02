@@ -17,15 +17,15 @@ public class CoaFileService : ICoaFileService
 
     public async Task UploadUserCoa(IFormFile requestCoa, Guid dynastyId)
     {
-        await using var fileStream =
-            File.Create(Path.Combine(_fileStorageConfiguration.UserCoaEnvironmentPath(), dynastyId + ".svg"));
-
         await using var coaSvgStream = requestCoa.OpenReadStream();
         
         if (!IsValidCoaSvg(coaSvgStream))
         {
             throw new ArgumentException($"Coa file is invalid");
         }
+        
+        await using var fileStream =
+            File.Create(Path.Combine(_fileStorageConfiguration.UserCoaEnvironmentPath(), dynastyId + ".svg"));
 
         await requestCoa.CopyToAsync(fileStream);
     }

@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;
+using System.Text.Json.Serialization;
 
 namespace Dynastic.Infrastructure.Persistence;
 
@@ -20,6 +21,12 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Dynasty>(builder =>
+            builder.Property(prop => prop.CoaConfiguration).HasConversion(
+                v => JsonSerializer.Serialize(v,
+                    new JsonSerializerOptions() { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull }),
+                v => JsonSerializer.Deserialize<JsonDocument>(v,
+                    new JsonSerializerOptions() { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull })!));
         // modelBuilder.Entity<Relationship>()
         //     .ToContainer(nameof(Relationships))
         //     .HasKey(e => new {

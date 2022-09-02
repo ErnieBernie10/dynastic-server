@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
 namespace Dynastic.Domain.Entities;
@@ -12,11 +14,12 @@ public class Dynasty : Base
     public string? Description { get; set; }
     public List<Person> Members { get; set; } = new();
     public DynastyOwnershipProperties OwnershipProperties { get; set; }
+    // TODO: Make this structured once agreed on model
+    public JsonDocument CoaConfiguration { get; set; } = default!;
 }
 
 public class DynastyOwnershipProperties
 {
-    public Guid Id { get; init; }
     public string? OwnerUserId { get; set; }
     public List<string> Members { get; set; } = new();
 
