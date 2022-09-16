@@ -19,7 +19,7 @@ public class DynastyController : ApiControllerBase<DynastyController>
     }
 
     // GET api/<DynastyController>/5
-    [HttpGet("{Id}")]
+    [HttpGet("{Id:guid}")]
     public async Task<Dynasty> Get([FromRoute] GetDynastyByIdQuery query)
     {
         return await Mediator.Send(query);
@@ -33,14 +33,14 @@ public class DynastyController : ApiControllerBase<DynastyController>
     }
 
     // POST api/<DynastyController>
-    [HttpPut("UploadCoaFile/{id:guid}")]
+    [HttpPut("{id:guid}/UploadCoaFile")]
     public async Task<Guid> UploadCoa(Guid id, [FromForm] CoaFileCommand command)
     {
         return await Mediator.Send(new AddDynastyCoaFileCommand() { Coa = command.Coa, Id = id });
     }
 
     // POST api/<DynastyController>
-    [HttpPut("CoaConfiguration/{id:guid}")]
+    [HttpPut("{id:guid}/CoaConfiguration")]
     public async Task<Guid> AddCoaConfiguration(Guid id, [FromBody] AddDynastyCoaConfigurationBody body)
     {
         return await Mediator.Send(new AddDynastyCoaConfigurationCommand() {
