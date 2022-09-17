@@ -18,6 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dynastic.Application.Test", "Dynastic.Application.Test\Dynastic.Application.Test.csproj", "{D9F69597-AA35-4FD4-B6F0-324D9C350BEB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dynastic.WebClient", "Dynastic.WebClient\Dynastic.WebClient.csproj", "{7464BAE6-177F-4E8F-BC31-060FFE6E3BC7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +46,10 @@ Global
 		{D9F69597-AA35-4FD4-B6F0-324D9C350BEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D9F69597-AA35-4FD4-B6F0-324D9C350BEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D9F69597-AA35-4FD4-B6F0-324D9C350BEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7464BAE6-177F-4E8F-BC31-060FFE6E3BC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7464BAE6-177F-4E8F-BC31-060FFE6E3BC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7464BAE6-177F-4E8F-BC31-060FFE6E3BC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7464BAE6-177F-4E8F-BC31-060FFE6E3BC7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
