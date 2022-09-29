@@ -13,6 +13,7 @@ namespace Dynastic.Application.Dynasties.Queries;
 
 public class GetDynastiesForUserQuery : IRequest<List<Dynasty>>
 {
+    public bool isFinished { get; set; } = true;
 }
 
 public class GetDynastiesForUserQueryHandler : IRequestHandler<GetDynastiesForUserQuery, List<Dynasty>>
@@ -30,6 +31,7 @@ public class GetDynastiesForUserQueryHandler : IRequestHandler<GetDynastiesForUs
     public async Task<List<Dynasty>> Handle(GetDynastiesForUserQuery request, CancellationToken cancellationToken)
     {
         return await _accessService.FilterUserDynasties(_context.Dynasties)
+            .Where(d => !request.isFinished || d.CreationStep == CreationStep.Finalized)
             .ToListAsync(cancellationToken: cancellationToken);
     }
 }

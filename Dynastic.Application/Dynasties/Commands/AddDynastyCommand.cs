@@ -12,8 +12,9 @@ namespace Dynastic.Application.Dynasties.Commands;
 
 public class AddDynastyCommand : IRequest<Guid>
 {
-    public string? Name { get; set; }
+    public string Name { get; set; } = default!;
     public string? Description { get; set; }
+    public string? Motto { get; set; }
 }
 
 public class AddDynastyCommandHandler : IRequestHandler<AddDynastyCommand, Guid>
@@ -33,6 +34,8 @@ public class AddDynastyCommandHandler : IRequestHandler<AddDynastyCommand, Guid>
             new Dynasty {
                 Name = request.Name,
                 Description = request.Description,
+                Motto = request.Motto,
+                CreationStep = CreationStep.BasicInfo,
                 OwnershipProperties = new DynastyOwnershipProperties() { OwnerUserId = _currentUserService.UserId }
             }, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);

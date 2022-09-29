@@ -1,5 +1,6 @@
 using Ardalis.GuardClauses;
 using Dynastic.Application.Common.Interfaces;
+using Dynastic.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
@@ -36,6 +37,7 @@ public class AddDynastyCoaConfigurationCommandHandler : IRequestHandler<AddDynas
         Guard.Against.NotFound(request.Id, dynasty, nameof(request));
 
         dynasty.CoaConfiguration = request.CoaConfiguration;
+        dynasty.CreationStep = CreationStep.Coa;
 
         await _context.SaveChangesAsync(cancellationToken);
 

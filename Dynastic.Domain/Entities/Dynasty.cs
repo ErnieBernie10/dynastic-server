@@ -10,12 +10,22 @@ namespace Dynastic.Domain.Entities;
 
 public class Dynasty : Base
 {
-    public string? Name { get; set; }
+    public string Name { get; set; } = default!;
     public string? Description { get; set; }
+    public string? Motto { get; set; }
     public List<Person> Members { get; set; } = new();
+    public CreationStep CreationStep { get; set; }
     public DynastyOwnershipProperties OwnershipProperties { get; set; }
     // TODO: Make this structured once agreed on model
     public JsonDocument CoaConfiguration { get; set; } = default!;
+}
+
+public enum CreationStep
+{
+    BasicInfo,
+    Coa,
+    Review,
+    Finalized
 }
 
 public class DynastyOwnershipProperties
