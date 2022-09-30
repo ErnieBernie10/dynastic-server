@@ -49,9 +49,12 @@ public class DynastyController : ApiControllerBase<DynastyController>
     }
 
     // PUT api/<DynastyController>/5
-    [HttpPut("{id}")]
-    public void Put(int id, [FromBody] string value)
+    [HttpPut("{id:guid}")]
+    public async Task<Guid> Put(Guid id, [FromBody] UpdateDynastyCommandBody body)
     {
+        return await Mediator.Send(new UpdateDynastyCommand() {
+            Id = id, Description = body.Description, Motto = body.Motto, Name = body.Name
+        });
     }
 
     // DELETE api/<DynastyController>/5
