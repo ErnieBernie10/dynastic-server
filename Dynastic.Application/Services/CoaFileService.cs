@@ -1,4 +1,5 @@
 using Dynastic.Application.Common.Interfaces;
+using Dynastic.Domain.Entities;
 using Dynastic.Domain.Extensions;
 using Microsoft.AspNetCore.Http;
 using System.Text;
@@ -15,6 +16,11 @@ public class CoaFileService : ICoaFileService
         _fileStorageConfiguration = fileStorageConfiguration;
     }
 
+    private string GetDynastyCoaFilePath(string dynastyId)
+    {
+        return Path.Combine(_fileStorageConfiguration.UserCoaEnvironmentPath(), dynastyId + ".svg");
+    }
+
     public async Task UploadUserCoa(IFormFile requestCoa, Guid dynastyId)
     {
         await using var coaSvgStream = requestCoa.OpenReadStream();
@@ -25,7 +31,7 @@ public class CoaFileService : ICoaFileService
         }
         
         await using var fileStream =
-            File.Create(Path.Combine(_fileStorageConfiguration.UserCoaEnvironmentPath(), dynastyId + ".svg"));
+            File.Create(GetDynastyCoaFilePath(dynastyId.ToString()));
 
         await requestCoa.CopyToAsync(fileStream);
     }
@@ -37,5 +43,10 @@ public class CoaFileService : ICoaFileService
         var svgString = coaFileStream.ReadBytesToString(256);
 
         return svgString.Contains("<svg ") || svgString.Contains("<svg\n") || svgString.Contains("<svg\r\n");
+    }
+
+    public bool HasCoaUploaded(Dynasty dynasty)
+    {
+        return File.Exists(GetDynastyCoaFilePath(dynasty.Id.ToString()));
     }
 }

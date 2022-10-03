@@ -1,8 +1,10 @@
 using Ardalis.GuardClauses;
 using Dynastic.Application.Common.Interfaces;
 using Dynastic.Domain.Common.Interfaces;
+using Dynastic.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Azure.Cosmos.Linq;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dynastic.Application.Dynasties.Commands;
@@ -42,6 +44,12 @@ public class AddDynastyCoaCommandHandler : IRequestHandler<AddDynastyCoaFileComm
         // TODO: Add validation for SVG file
 
         await _coaFileService.UploadUserCoa(request.Coa, dynasty.Id);
+
+        if (dynasty.CoaConfiguration is not null)
+        {
+            dynasty.CreationStep = CreationStep.Coa;
+            await _context.SaveChangesAsync(cancellationToken);
+        }
 
         return dynasty.Id;
     }

@@ -17,7 +17,7 @@ public class Dynasty : Base
     public CreationStep CreationStep { get; set; }
     public DynastyOwnershipProperties OwnershipProperties { get; set; }
     // TODO: Make this structured once agreed on model
-    public JsonDocument CoaConfiguration { get; set; } = default!;
+    public JsonDocument? CoaConfiguration { get; set; }
 }
 
 public enum CreationStep

@@ -22,11 +22,13 @@ public class AddDynastyCoaConfigurationCommandHandler : IRequestHandler<AddDynas
 {
     private readonly IApplicationDbContext _context;
     private readonly IAccessService _accessService;
+    private readonly ICoaFileService _coaFileService;
 
-    public AddDynastyCoaConfigurationCommandHandler(IApplicationDbContext context, IAccessService accessService)
+    public AddDynastyCoaConfigurationCommandHandler(IApplicationDbContext context, IAccessService accessService, ICoaFileService coaFileService)
     {
         _context = context;
         _accessService = accessService;
+        _coaFileService = coaFileService;
     }
 
     public async Task<Guid> Handle(AddDynastyCoaConfigurationCommand request, CancellationToken cancellationToken)
@@ -37,7 +39,11 @@ public class AddDynastyCoaConfigurationCommandHandler : IRequestHandler<AddDynas
         Guard.Against.NotFound(request.Id, dynasty, nameof(request));
 
         dynasty.CoaConfiguration = request.CoaConfiguration;
-        dynasty.CreationStep = CreationStep.Coa;
+
+        if (_coaFileService.HasCoaUploaded(dynasty))
+        {
+            dynasty.CreationStep = CreationStep.Coa;
+        }
 
         await _context.SaveChangesAsync(cancellationToken);
 
