@@ -47,7 +47,8 @@ public class AddDynastyCoaCommandHandler : IRequestHandler<AddDynastyCoaFileComm
 
         if (dynasty.CoaConfiguration is not null)
         {
-            dynasty.CreationStep = CreationStep.Coa;
+            // TODO: Once we have review step. Set this to CreationStep.Coa
+            dynasty.CreationStep = CreationStep.Finalized;
             await _context.SaveChangesAsync(cancellationToken);
         }
 

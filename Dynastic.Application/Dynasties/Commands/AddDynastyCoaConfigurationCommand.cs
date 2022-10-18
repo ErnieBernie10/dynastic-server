@@ -42,7 +42,8 @@ public class AddDynastyCoaConfigurationCommandHandler : IRequestHandler<AddDynas
 
         if (_coaFileService.HasCoaUploaded(dynasty))
         {
-            dynasty.CreationStep = CreationStep.Coa;
+            // TODO: Once we have review step. Set this to CreationStep.Coa
+            dynasty.CreationStep = CreationStep.Finalized;
         }
 
         await _context.SaveChangesAsync(cancellationToken);

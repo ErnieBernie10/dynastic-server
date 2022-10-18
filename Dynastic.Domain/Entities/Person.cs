@@ -8,9 +8,8 @@ using System.Threading.Tasks;
 
 namespace Dynastic.Domain.Entities;
 
-public class Person
+public class Person : Base
 {
-    public Guid Id { get; set; } = Guid.NewGuid();
     public string? Firstname { get; set; }
     public string? Middlename { get; set; }
     public string? Lastname { get; set; }

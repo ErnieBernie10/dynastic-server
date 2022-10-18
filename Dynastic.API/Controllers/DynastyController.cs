@@ -13,7 +13,7 @@ public class DynastyController : ApiControllerBase<DynastyController>
 {
     // GET: api/<DynastyController>
     [HttpGet]
-    public async Task<IEnumerable<Dynasty>> Get([FromQuery] GetDynastiesForUserQuery request)
+    public async Task<IEnumerable<DynastyDto>> Get([FromQuery] GetDynastiesForUserQuery request)
     {
         return await Mediator.Send(request);
     }

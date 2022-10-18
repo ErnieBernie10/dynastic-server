@@ -47,7 +47,8 @@ public class AddDynastyCommandHandler : IRequestHandler<AddDynastyCommand, Guid>
                 Description = request.Description,
                 Motto = request.Motto,
                 CreationStep = CreationStep.BasicInfo,
-                OwnershipProperties = new DynastyOwnershipProperties() { OwnerUserId = _currentUserService.UserId }
+                OwnershipProperties = new DynastyOwnershipProperties() { OwnerUserId = _currentUserService.UserId },
+                Members = new List<Person>() { new () { Owner = _currentUserService.UserId } }
             }, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
         return entity.Entity.Id;

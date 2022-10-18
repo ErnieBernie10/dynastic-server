@@ -12,6 +12,7 @@ public class FileStorageConfiguration : IFileStorageConfiguration
     }
 
     public string UserCoaStoragePath { get; set; }
+    public string CoaFileServePath { get; set; }
 
     public string UserCoaEnvironmentPath()
     {

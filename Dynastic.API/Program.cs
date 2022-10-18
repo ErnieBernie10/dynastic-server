@@ -60,7 +60,7 @@ builder.Services.AddSwaggerGen(options => {
                 Implicit = new OpenApiOAuthFlow {
                     AuthorizationUrl = new Uri(authority + "/authorize?audience=" + audience),
                     Scopes = new Dictionary<string, string> {
-                        { "openid", "Open Id" }, { "email", "Email" }, { "profile", "Profile" },
+                        { "openid", "openid" }, { "profile", "profile" }, { "email", "email" },
                     }
                 }
             }
@@ -68,10 +68,14 @@ builder.Services.AddSwaggerGen(options => {
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
 
+
 var app = builder.Build();
 
 
 var scope = app.Services.CreateScope();
+
+DynasticMapster.Configure(scope.ServiceProvider);
+
 var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
 // Configure the HTTP request pipeline.
@@ -104,7 +108,7 @@ app.UseCors(options => {
     options.AllowAnyOrigin();
 });
 
-// app.UseMiddleware<ErrorHandlingMiddleware>();
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 
@@ -116,7 +120,7 @@ app.MapControllers();
 
 app.UseStaticFiles(new StaticFileOptions() {
     FileProvider = new PhysicalFileProvider(fileStorageConfig.UserCoaEnvironmentPath()),
-    RequestPath = new PathString("/user-coa")
+    RequestPath = new PathString(fileStorageConfig.CoaFileServePath),
 });
 
 app.Run();

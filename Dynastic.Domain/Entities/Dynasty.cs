@@ -15,6 +15,7 @@ public class Dynasty : Base
     public string? Motto { get; set; }
     public List<Person> Members { get; set; } = new();
     public CreationStep CreationStep { get; set; }
+    public bool IsPrimary { get; set; } = false;
     public DynastyOwnershipProperties OwnershipProperties { get; set; }
     // TODO: Make this structured once agreed on model
     public JsonDocument? CoaConfiguration { get; set; }

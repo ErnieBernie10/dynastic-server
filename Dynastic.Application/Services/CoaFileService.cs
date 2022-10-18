@@ -1,4 +1,5 @@
 using Dynastic.Application.Common.Interfaces;
+using Dynastic.Application.Dynasties.Queries;
 using Dynastic.Domain.Entities;
 using Dynastic.Domain.Extensions;
 using Microsoft.AspNetCore.Http;
@@ -10,10 +11,12 @@ namespace Dynastic.Application.Services;
 public class CoaFileService : ICoaFileService
 {
     private readonly IFileStorageConfiguration _fileStorageConfiguration;
+    private readonly IHttpContextAccessor _contextAccessor;
 
-    public CoaFileService(IFileStorageConfiguration fileStorageConfiguration)
+    public CoaFileService(IFileStorageConfiguration fileStorageConfiguration, IHttpContextAccessor contextAccessor)
     {
         _fileStorageConfiguration = fileStorageConfiguration;
+        _contextAccessor = contextAccessor;
     }
 
     private string GetDynastyCoaFilePath(string dynastyId)
@@ -48,5 +51,11 @@ public class CoaFileService : ICoaFileService
     public bool HasCoaUploaded(Dynasty dynasty)
     {
         return File.Exists(GetDynastyCoaFilePath(dynasty.Id.ToString()));
+    }
+
+    public string GetCoaPath(Dynasty dynasty)
+    {
+        var protocol = _contextAccessor.HttpContext.Request.IsHttps ? "https" : "http";
+        return $"{protocol}://{_contextAccessor.HttpContext.Request.Host.Value}{_fileStorageConfiguration.CoaFileServePath}/{dynasty.Id}.svg";
     }
 }

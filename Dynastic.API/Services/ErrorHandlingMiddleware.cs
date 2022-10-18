@@ -25,24 +25,19 @@ public class ErrorHandlingMiddleware
         }
         catch (Exception e)
         {
-            ErrorDetails? result;
             HttpStatusCode code;
             switch (e)
             {
                 case NotFoundException:
-                    result = new ErrorDetails() { Errors = new List<Error>() { new() { Message = e.Message } } };
                     code = HttpStatusCode.NotFound;
                     break;
                 default:
-                    result = new ErrorDetails() {
-                        Errors = new List<Error>() { new() { Message = "Internal Server Error" } }
-                    };
                     code = HttpStatusCode.InternalServerError;
                     break;
             }
 
             context.Response.StatusCode = (int) code;
-            await context.Response.WriteAsJsonAsync(result);
+            await context.Response.WriteAsync(e.StackTrace);
         }
     }
 }

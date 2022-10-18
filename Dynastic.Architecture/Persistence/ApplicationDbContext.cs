@@ -1,4 +1,5 @@
 ﻿using Dynastic.Application.Common.Interfaces;
+using Dynastic.Application.Users.Queries;
 using Dynastic.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Azure.Cosmos;
@@ -68,7 +69,11 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
             .HasNoDiscriminator()
             .OwnsMany(d => d.Members)
             .OwnsMany(m => m.Relationships);
+        modelBuilder.Entity<UserInfo>()
+            .ToContainer(nameof(Users))
+            .HasNoDiscriminator();
     }
 
     public DbSet<Dynasty> Dynasties => Set<Dynasty>();
+    public DbSet<UserInfo> Users => Set<UserInfo>();
 }

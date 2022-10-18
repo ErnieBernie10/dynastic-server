@@ -27,4 +27,8 @@
     <ProjectReference Include="..\Dynastic.Domain\Dynastic.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="user-coa" />
+  </ItemGroup>
+
 </Project>
