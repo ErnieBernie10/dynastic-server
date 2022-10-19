@@ -14,7 +14,9 @@ public static class DependencyInjection
 
         services.AddSingleton<IAccessService, AccessService>();
         services.AddSingleton<ICoaFileService, CoaFileService>();
-        
+
+        services.AddTransient<IUserInfoService, UserInfoService>();
+
         return services;
     }
 }
