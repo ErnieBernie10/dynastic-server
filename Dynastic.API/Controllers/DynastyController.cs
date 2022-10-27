@@ -1,6 +1,7 @@
 ﻿using Dynastic.Application.Dynasties.Commands;
 using Dynastic.Application.Dynasties.Queries;
 using Dynastic.Domain.Entities;
+using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -46,6 +47,14 @@ public class DynastyController : ApiControllerBase<DynastyController>
         return await Mediator.Send(new AddDynastyCoaConfigurationCommand() {
             CoaConfiguration = body.CoaConfiguration, Id = id
         });
+    }
+    
+    [HttpPost("{id:guid}/Relationships")]
+    public async Task<ActionResult<Guid>> Post(Guid id, [FromBody] AddRelationshipBody body)
+    {
+        var command = body.Adapt<AddRelationshipCommand>();
+        command.DynastyId = id;
+        return await Mediator.Send(command);
     }
 
     // PUT api/<DynastyController>/5

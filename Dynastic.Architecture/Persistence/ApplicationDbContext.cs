@@ -64,11 +64,11 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
         //         ChildId = cr.ChildId,
         //         RelationshipId = cr.RelationshipId
         //     });
-        modelBuilder.Entity<Dynasty>()
+        var dynasty = modelBuilder.Entity<Dynasty>()
             .ToContainer(nameof(Dynasties))
-            .HasNoDiscriminator()
-            .OwnsMany(d => d.Members)
-            .OwnsMany(m => m.Relationships);
+            .HasNoDiscriminator();
+        dynasty.OwnsMany(d => d.Members);
+        dynasty.OwnsMany(d => d.Relationships);
         modelBuilder.Entity<UserInfo>()
             .ToContainer(nameof(Users))
             .HasNoDiscriminator();

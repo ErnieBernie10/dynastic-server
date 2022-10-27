@@ -35,7 +35,7 @@ public class AddDynastyCommandHandler : IRequestHandler<AddDynastyCommand, Guid>
 
     public async Task<Guid> Handle(AddDynastyCommand request, CancellationToken cancellationToken)
     {
-        var unfinishedDynasty = _accessService.FilterUserDynasties(_context.Dynasties)
+        var unfinishedDynasty = _accessService.GetUserDynasties()
             .FirstOrDefault(d => d.CreationStep != CreationStep.Finalized);
 
         if (unfinishedDynasty is not null)

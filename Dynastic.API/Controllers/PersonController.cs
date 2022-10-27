@@ -1,4 +1,5 @@
-﻿using Dynastic.Application.Persons.Commands;
+﻿using Dynastic.Application.Dynasties.Commands;
+using Dynastic.Application.Persons.Commands;
 using Dynastic.Application.Persons.Queries;
 using Dynastic.Domain.Entities;
 using Mapster;
@@ -9,22 +10,22 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dynastic.API.Controllers;
 
-[Route("api/Dynasty/{DynastyId:guid}/[controller]")]
+[Route("api/Dynasty/{dynastyId:guid}/[controller]")]
 [Authorize]
 public class PersonController : ApiControllerBase<PersonController>
 {
     // GET: api/<PersonController>
     [HttpGet]
-    public async Task<ActionResult<List<Person>>> Get([FromRoute] GetPersonsByDynastyQuery request)
+    public async Task<ActionResult<List<Person>>> Get(Guid dynastyId)
     {
-        return await Mediator.Send(request);
+        return await Mediator.Send(new GetPersonsByDynastyQuery() { DynastyId = dynastyId });
     }
 
     // GET api/<PersonController>/5
-    [HttpGet("{Id:guid}")]
-    public async Task<ActionResult<Person>> Get([FromRoute] GetDynastyPersonByIdQuery request)
+    [HttpGet("{id:guid}")]
+    public async Task<ActionResult<Person>> Get(Guid dynastyId, Guid id)
     {
-        return await Mediator.Send(request);
+        return await Mediator.Send(new GetDynastyPersonByIdQuery { Id = id, DynastyId = dynastyId });
     }
 
     // POST api/<PersonController>

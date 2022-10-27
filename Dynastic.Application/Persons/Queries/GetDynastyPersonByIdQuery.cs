@@ -19,19 +19,18 @@ public class GetDynastyPersonByIdQuery : IRequest<Person>
 
 public class GetDynastyPersonByIdQueryHandler : IRequestHandler<GetDynastyPersonByIdQuery, Person>
 {
-    private readonly IApplicationDbContext _context;
     private readonly IAccessService _accessService;
 
-    public GetDynastyPersonByIdQueryHandler(IApplicationDbContext context, IAccessService accessService)
+    public GetDynastyPersonByIdQueryHandler(IAccessService accessService)
     {
-        this._context = context;
         _accessService = accessService;
     }
 
     public async Task<Person> Handle(GetDynastyPersonByIdQuery request, CancellationToken cancellationToken)
     {
-        var dynasty = await _accessService.FilterUserDynasties(_context.Dynasties)
+        var dynasty = await _accessService.GetUserDynasties()
             .Where(d => d.Id.Equals(request.DynastyId))
+            .AsNoTracking()
             .ToListAsync(cancellationToken: cancellationToken);
         var person = dynasty
             .Select(d => d.Members.FirstOrDefault(m => m.Id.Equals(request.Id)))

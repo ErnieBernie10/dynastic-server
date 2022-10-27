@@ -7,12 +7,14 @@ namespace Dynastic.Application.Services;
 
 public class AccessService : IAccessService
 {
-    public AccessService(ICurrentUserService currentUserService)
+    public AccessService(ICurrentUserService currentUserService, IApplicationDbContext context)
     {
         _currentUserService = currentUserService;
+        _context = context;
     }
 
     private readonly ICurrentUserService _currentUserService;
+    private readonly IApplicationDbContext _context;
 
     public bool HasAccessToDynasty(Dynasty dynasty)
     {
@@ -21,9 +23,9 @@ public class AccessService : IAccessService
                 dynasty.OwnershipProperties.Members.Contains(_currentUserService.UserId));
     }
 
-    public IQueryable<Dynasty> FilterUserDynasties(DbSet<Dynasty> dynasties)
+    public IQueryable<Dynasty> GetUserDynasties()
     {
         // TODO: Refactor into some efcore expression once they support ARRAY_CONTAINS
-        return dynasties.FromSqlRaw("SELECT * FROM c WHERE c.OwnershipProperties.OwnerUserId LIKE {0} OR ARRAY_CONTAINS(c.OwnershipProperties.Members, {0})", _currentUserService.UserId);
+        return _context.Dynasties.FromSqlRaw("SELECT * FROM c WHERE c.OwnershipProperties.OwnerUserId LIKE {0} OR ARRAY_CONTAINS(c.OwnershipProperties.Members, {0})", _currentUserService.UserId);
     }
 }

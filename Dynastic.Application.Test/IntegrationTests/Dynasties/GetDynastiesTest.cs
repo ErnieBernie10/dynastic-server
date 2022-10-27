@@ -14,7 +14,7 @@ namespace Dynastic.Application.Test.IntegrationTests.Dynasties
             });
             await Context.SaveChangesAsync();
 
-            var query = new GetDynastiesForUserQueryHandler(Context, AccessService);
+            var query = new GetDynastiesForUserQueryHandler(AccessService);
             var result = await query.Handle(new GetDynastiesForUserQuery(), CancellationToken.None);
             Assert.NotNull(result);
             Assert.NotEmpty(result);
@@ -29,7 +29,7 @@ namespace Dynastic.Application.Test.IntegrationTests.Dynasties
             });
             await Context.SaveChangesAsync();
 
-            var query = new GetDynastiesForUserQueryHandler(Context, AccessService);
+            var query = new GetDynastiesForUserQueryHandler(AccessService);
             var result = await query.Handle(new GetDynastiesForUserQuery(), CancellationToken.None);
             Assert.NotNull(result);
             Assert.NotEmpty(result);
@@ -44,7 +44,7 @@ namespace Dynastic.Application.Test.IntegrationTests.Dynasties
             });
             await Context.SaveChangesAsync();
 
-            var query = new GetDynastiesForUserQueryHandler(Context, AccessService);
+            var query = new GetDynastiesForUserQueryHandler(AccessService);
             var result = await query.Handle(new GetDynastiesForUserQuery(), CancellationToken.None);
             Assert.NotNull(result);
             Assert.Empty(result);

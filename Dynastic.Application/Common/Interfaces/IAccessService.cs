@@ -7,5 +7,5 @@ public interface IAccessService
 {
     public bool HasAccessToDynasty(Dynasty dynasty);
     
-    public IQueryable<Dynasty> FilterUserDynasties(DbSet<Dynasty> dynasties);
+    public IQueryable<Dynasty> GetUserDynasties();
 }

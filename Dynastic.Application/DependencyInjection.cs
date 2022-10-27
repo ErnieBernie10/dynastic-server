@@ -12,7 +12,7 @@ public static class DependencyInjection
     {
         services.AddMediatR(Assembly.GetExecutingAssembly());
 
-        services.AddSingleton<IAccessService, AccessService>();
+        services.AddScoped<IAccessService, AccessService>();
         services.AddSingleton<ICoaFileService, CoaFileService>();
 
         services.AddTransient<IUserInfoService, UserInfoService>();

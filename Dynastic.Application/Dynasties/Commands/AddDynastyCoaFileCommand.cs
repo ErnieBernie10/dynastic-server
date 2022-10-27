@@ -35,7 +35,7 @@ public class AddDynastyCoaCommandHandler : IRequestHandler<AddDynastyCoaFileComm
 
     public async Task<Guid> Handle(AddDynastyCoaFileCommand request, CancellationToken cancellationToken)
     {
-        var dynasty = await _accessService.FilterUserDynasties(_context.Dynasties)
+        var dynasty = await _accessService.GetUserDynasties()
             .FirstOrDefaultAsync((dynasty => dynasty.Id.Equals(request.Id)),
                 cancellationToken: cancellationToken);
 

@@ -41,7 +41,7 @@ public class AddPersonToDynastyCommandHandler : IRequestHandler<AddPersonToDynas
 
     public async Task<Guid> Handle(AddPersonToDynastyCommand request, CancellationToken cancellationToken)
     {
-        var dynasty = await _accessService.FilterUserDynasties(_context.Dynasties)
+        var dynasty = await _accessService.GetUserDynasties()
             .Where(d => d.Id.Equals(request.DynastyId))
             .FirstOrDefaultAsync(cancellationToken: cancellationToken);
         if (dynasty is null)

@@ -14,6 +14,7 @@ public class Dynasty : Base
     public string? Description { get; set; }
     public string? Motto { get; set; }
     public List<Person> Members { get; set; } = new();
+    public List<Relationship> Relationships { get; set; } = new();
     public CreationStep CreationStep { get; set; }
     public bool IsPrimary { get; set; } = false;
     public DynastyOwnershipProperties OwnershipProperties { get; set; }

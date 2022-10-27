@@ -31,7 +31,7 @@ public class UpdateDynastyCommandHandler : IRequestHandler<UpdateDynastyCommand,
     
     public async Task<Guid> Handle(UpdateDynastyCommand request, CancellationToken cancellationToken)
     {
-        var dynasty = _accessService.FilterUserDynasties(_context.Dynasties)
+        var dynasty = _accessService.GetUserDynasties()
             .FirstOrDefault(d => d.Id.Equals(request.Id));
 
         if (dynasty is null)

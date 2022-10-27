@@ -20,19 +20,17 @@ public class GetDynastiesForUserQuery : IRequest<List<DynastyDto>>
 
 public class GetDynastiesForUserQueryHandler : IRequestHandler<GetDynastiesForUserQuery, List<DynastyDto>>
 {
-    private readonly IApplicationDbContext _context;
     private readonly IAccessService _accessService;
 
-    public GetDynastiesForUserQueryHandler(IApplicationDbContext context,
-        IAccessService accessService)
+    public GetDynastiesForUserQueryHandler(IAccessService accessService)
     {
-        _context = context;
         _accessService = accessService;
     }
 
     public async Task<List<DynastyDto>> Handle(GetDynastiesForUserQuery request, CancellationToken cancellationToken)
     {
-        var dynasties = await _accessService.FilterUserDynasties(_context.Dynasties)
+        var dynasties = await _accessService.GetUserDynasties()
+            .AsNoTracking()
             .Where(d => !request.isFinished || d.CreationStep == CreationStep.Finalized)
             .ToListAsync(cancellationToken: cancellationToken);
         return dynasties.Adapt<List<DynastyDto>>();

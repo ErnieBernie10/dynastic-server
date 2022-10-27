@@ -33,7 +33,7 @@ public class AddDynastyCoaConfigurationCommandHandler : IRequestHandler<AddDynas
 
     public async Task<Guid> Handle(AddDynastyCoaConfigurationCommand request, CancellationToken cancellationToken)
     {
-        var dynasty = await _accessService.FilterUserDynasties(_context.Dynasties)
+        var dynasty = await _accessService.GetUserDynasties()
             .FirstOrDefaultAsync(dynasty => dynasty.Id.Equals(request.Id), cancellationToken: cancellationToken);
 
         Guard.Against.NotFound(request.Id, dynasty, nameof(request));

@@ -10,5 +10,5 @@ public class Relationship
 {
     public Guid PersonId { get; set; }
     public Guid? PartnerId { get; set; }
-    public List<string>? Children { get; set; }
+    public List<string> Children { get; set; } = new();
 }

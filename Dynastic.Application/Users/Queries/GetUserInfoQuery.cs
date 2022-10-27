@@ -24,8 +24,10 @@ public class GetUserInfoQueryHandler : IRequestHandler<GetUserInfoQuery, UserInf
 
     public async Task<UserInfoDto> Handle(GetUserInfoQuery request, CancellationToken cancellationToken)
     {
-        var userInfo = await _context.Users.FirstOrDefaultAsync(u => u.UserId.Equals(_currentUserService.UserId),
-            cancellationToken: cancellationToken);
+        var userInfo = await _context.Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(u => u.UserId.Equals(_currentUserService.UserId),
+                cancellationToken: cancellationToken);
 
         Guard.Against.NotFound(_currentUserService.UserId, userInfo, nameof(userInfo));
 
