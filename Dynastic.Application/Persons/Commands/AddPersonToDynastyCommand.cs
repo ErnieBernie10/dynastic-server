@@ -1,5 +1,6 @@
 using Ardalis.GuardClauses;
 using Dynastic.Application.Common.Interfaces;
+using Dynastic.Application.Services;
 using Dynastic.Domain.Common.Interfaces;
 using Dynastic.Domain.Entities;
 using MediatR;
@@ -14,8 +15,7 @@ namespace Dynastic.Application.Persons.Commands;
 
 public class AddPersonToDynastyBody
 {
-    [Required]
-    public string? Firstname { get; set; }
+    [Required] public string? Firstname { get; set; }
     public string? Middlename { get; set; }
     public string? Lastname { get; set; }
     public DateTime? BirthDate { get; set; }
@@ -49,6 +49,8 @@ public class AddPersonToDynastyCommandHandler : IRequestHandler<AddPersonToDynas
             throw new NotFoundException(request.DynastyId.ToString(), nameof(Dynasty));
         }
 
+        var relationshipManager = new PersonRelationshipManager(dynasty);
+
         var person = new Person {
             Firstname = request.Firstname,
             Middlename = request.Middlename,
@@ -57,7 +59,22 @@ public class AddPersonToDynastyCommandHandler : IRequestHandler<AddPersonToDynas
             MotherId = request.MotherId,
             BirthDate = request.BirthDate,
         };
+
+
         dynasty.Members!.Add(person);
+
+        var mother = dynasty.Members.FirstOrDefault(m => m.MotherId.Equals(request.MotherId));
+        var father = dynasty.Members.FirstOrDefault(m => m.FatherId.Equals(request.FatherId));
+
+        if (mother is not null && father is not null)
+        {
+            relationshipManager.AddChild(person, father, mother);
+        }
+        else
+        {
+            relationshipManager.AddChild(person, (mother ?? father) ?? throw new InvalidOperationException());
+        }
+
         var updated = _context.Dynasties.Update(dynasty);
         await _context.SaveChangesAsync(cancellationToken);
         return person.Id;

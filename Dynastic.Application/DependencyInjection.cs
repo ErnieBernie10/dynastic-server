@@ -14,6 +14,7 @@ public static class DependencyInjection
 
         services.AddScoped<IAccessService, AccessService>();
         services.AddSingleton<ICoaFileService, CoaFileService>();
+        services.AddSingleton<IDynastyFilesService, DynastyFileService>();
 
         services.AddTransient<IUserInfoService, UserInfoService>();
 

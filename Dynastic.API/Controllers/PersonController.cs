@@ -37,6 +37,15 @@ public class PersonController : ApiControllerBase<PersonController>
         return await Mediator.Send(command);
     }
 
+    // POST api/<PersonController>/5/Picture
+    [HttpPut("{id:guid}/Picture")]
+    public async Task<ActionResult<Guid>> Post(Guid dynastyId, Guid id, [FromForm] AddPersonPictureBody body)
+    {
+        return await Mediator.Send(new AddPersonPictureCommand() {
+            DynastyId = dynastyId, PersonId = id, Picture = body.Picture
+        });
+    }
+
     // PUT api/<PersonController>/5
     [HttpPut("{id}")]
     public void Put(int id, [FromBody] string value)
