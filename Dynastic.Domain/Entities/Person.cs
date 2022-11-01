@@ -17,4 +17,5 @@ public class Person : Base
     public Guid? FatherId { get; set; }
     public DateTime? BirthDate { get; set; }
     public string? Owner { get; set; }
+    
 }

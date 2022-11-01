@@ -12,6 +12,10 @@ public class PersonRelationshipManager : IPersonRelationshipManager
     }
     public Relationship PairPartner(Person person, Person partner)
     {
+        if (person.Equals(partner))
+        {
+            throw new ArgumentException("Can't pair a person with itself");
+        }
         var relationship = FindRelationship(_dynasty, person, partner);
         if (relationship is not null)
         {

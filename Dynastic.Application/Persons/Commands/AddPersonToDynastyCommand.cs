@@ -58,13 +58,13 @@ public class AddPersonToDynastyCommandHandler : IRequestHandler<AddPersonToDynas
             FatherId = request.FatherId,
             MotherId = request.MotherId,
             BirthDate = request.BirthDate,
+            Id = Guid.NewGuid(),
         };
 
-
         dynasty.Members!.Add(person);
-
-        var mother = dynasty.Members.FirstOrDefault(m => m.MotherId.Equals(request.MotherId));
-        var father = dynasty.Members.FirstOrDefault(m => m.FatherId.Equals(request.FatherId));
+        
+        var mother = dynasty.Members.FirstOrDefault(m => m.Id.Equals(request.MotherId));
+        var father = dynasty.Members.FirstOrDefault(m => m.Id.Equals(request.FatherId));
 
         if (mother is not null && father is not null)
         {
