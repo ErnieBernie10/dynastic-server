@@ -16,8 +16,8 @@ namespace Dynastic.Application.Persons.Commands;
 public class AddPersonToDynastyBody
 {
     [Required] public string? Firstname { get; set; }
-    public string? Middlename { get; set; }
-    public string? Lastname { get; set; }
+    public string? MiddleName { get; set; }
+    [Required] public string? Lastname { get; set; }
     public DateTime? BirthDate { get; set; }
     public Guid? MotherId { get; set; }
     public Guid? FatherId { get; set; }
@@ -53,7 +53,7 @@ public class AddPersonToDynastyCommandHandler : IRequestHandler<AddPersonToDynas
 
         var person = new Person {
             Firstname = request.Firstname,
-            Middlename = request.Middlename,
+            MiddleName = request.MiddleName,
             Lastname = request.Lastname,
             FatherId = request.FatherId,
             MotherId = request.MotherId,

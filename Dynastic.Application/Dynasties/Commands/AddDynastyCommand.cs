@@ -58,7 +58,7 @@ public class AddDynastyCommandHandler : IRequestHandler<AddDynastyCommand, Guid>
                         Owner = _currentUserService.UserId,
                         Firstname = user.Firstname,
                         Lastname = user.Lastname,
-                        Middlename = user.Middlename,
+                        MiddleName = user.MiddleName,
                         BirthDate = user.BirthDate,
                     }
                 }

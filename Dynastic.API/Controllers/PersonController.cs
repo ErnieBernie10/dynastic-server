@@ -47,9 +47,13 @@ public class PersonController : ApiControllerBase<PersonController>
     }
 
     // PUT api/<PersonController>/5
-    [HttpPut("{id}")]
-    public void Put(int id, [FromBody] string value)
+    [HttpPut("{id:guid}")]
+    public async Task<Guid> Put(Guid dynastyId, Guid id, [FromBody] UpdatePersonBody body)
     {
+        var command = body.Adapt<UpdatePersonCommand>();
+        command.DynastyId = dynastyId;
+        command.Id = id;
+        return await Mediator.Send(command);
     }
 
     // DELETE api/<PersonController>/5

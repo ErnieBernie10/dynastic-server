@@ -6,17 +6,20 @@ namespace Dynastic.Application.Services;
 public class PersonRelationshipManager : IPersonRelationshipManager
 {
     private Dynasty _dynasty;
+
     public PersonRelationshipManager(Dynasty dynasty)
     {
         _dynasty = dynasty;
     }
+
     public Relationship PairPartner(Person person, Person partner)
     {
         if (person.Equals(partner))
         {
             throw new ArgumentException("Can't pair a person with itself");
         }
-        var relationship = FindRelationship(_dynasty, person, partner);
+
+        var relationship = GetRelationship(person, partner);
         if (relationship is not null)
         {
             // This relationship already exists
@@ -55,14 +58,15 @@ public class PersonRelationshipManager : IPersonRelationshipManager
         return singleRelationship;
     }
 
-    public Relationship? FindRelationship(Dynasty dynasty, Person person, Person partner)
+    public Relationship? GetRelationship(Person? person, Person? partner)
     {
-        return dynasty.Relationships.FirstOrDefault(r =>
-            r.PartnerId.Equals(partner.Id) && r.PersonId.Equals(person.Id) ||
-            r.PartnerId.Equals(person.Id) || r.PersonId.Equals(partner.Id));
+        return _dynasty.Relationships.FirstOrDefault(r =>
+                   r.PartnerId.Equals(partner?.Id) && r.PersonId.Equals(person?.Id) ||
+                   r.PartnerId.Equals(person?.Id) || r.PersonId.Equals(partner?.Id)) ??
+               GetSingleParentRelationship((person ?? partner) ?? throw new InvalidOperationException());
     }
 
-    public IEnumerable<Relationship> FindRelationships(Person person)
+    public IEnumerable<Relationship> GetRelationships(Person person)
     {
         return _dynasty.Relationships.Where(r => r.PersonId.Equals(person.Id) || r.PartnerId.Equals(person.Id));
     }
@@ -70,5 +74,41 @@ public class PersonRelationshipManager : IPersonRelationshipManager
     public Relationship? GetSingleParentRelationship(Person person)
     {
         return _dynasty.Relationships.FirstOrDefault(r => r.PersonId.Equals(person.Id) && r.PartnerId is null);
+    }
+
+    public void UpdatePersonParents(Person person, Person? newFather, Person? newMother)
+    {
+        if ((newMother is not null && newMother.Id.Equals(person.MotherId)) &&
+            (newFather is not null && newFather.Id.Equals(person.FatherId)))
+        {
+            return;
+        }
+
+        var oldMother = _dynasty.Members.FirstOrDefault(m => m.Id.Equals(person.MotherId));
+        var oldFather = _dynasty.Members.FirstOrDefault(m => m.Id.Equals(person.FatherId));
+
+        RemoveChild(person, oldMother, oldFather);
+
+        if (newMother is not null && newFather is not null)
+        {
+            AddChild(person, newFather, newMother);
+        }
+        else
+        {
+            AddChild(person, (newFather ?? newMother) ?? throw new InvalidOperationException());
+        }
+
+        person.MotherId = newMother?.Id ?? null;
+        person.FatherId = newFather?.Id ?? null;
+    }
+
+    private bool RemoveChild(Person person, Person? oldMother, Person? oldFather)
+    {
+        person.MotherId = null;
+        person.FatherId = null;
+
+        var relationship = GetRelationship(oldMother, oldFather);
+
+        return relationship?.Children.Remove(person.Id.ToString()) ?? false;
     }
 }

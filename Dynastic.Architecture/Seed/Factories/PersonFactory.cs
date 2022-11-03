@@ -18,7 +18,7 @@ public static class PersonFactory
             BirthDate = new DateTime(Faker.RandomNumber.Next(1900, 2000), Faker.RandomNumber.Next(1, 12), Faker.RandomNumber.Next(1, 28)),
             Firstname = Faker.Name.First(),
             Lastname = Faker.Name.Last(),
-            Middlename = Faker.Name.Middle(),
+            MiddleName = Faker.Name.Middle(),
             FatherId = father?.Id,
             MotherId = mother?.Id,
         };

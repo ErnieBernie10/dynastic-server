@@ -9,7 +9,7 @@ namespace Dynastic.Application.Users.Commands;
 public class CompleteSignupCommand : IRequest<bool>
 {
     public string? Firstname { get; set; }
-    public string Middlename { get; set; }
+    public string MiddleName { get; set; }
     public string Lastname { get; set; }
     public DateTime BirthDate { get; set; }
 }
@@ -38,7 +38,7 @@ public class CompleteSignupCommandHandler : IRequestHandler<CompleteSignupComman
         _context.Users.Add(new UserInfo() {
             Firstname = request.Firstname,
             Lastname = request.Lastname,
-            Middlename = request.Middlename,
+            MiddleName = request.MiddleName,
             BirthDate = request.BirthDate,
             UserId = _currentUserService.UserId,
         });
