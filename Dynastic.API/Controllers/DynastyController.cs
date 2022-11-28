@@ -1,4 +1,5 @@
-﻿using Dynastic.Application.Dynasties.Commands;
+﻿using Dynastic.Application.Common;
+using Dynastic.Application.Dynasties.Commands;
 using Dynastic.Application.Dynasties.Queries;
 using Dynastic.Domain.Entities;
 using Mapster;
@@ -15,6 +16,12 @@ public class DynastyController : ApiControllerBase<DynastyController>
     // GET: api/<DynastyController>
     [HttpGet]
     public async Task<IEnumerable<DynastyDto>> Get([FromQuery] GetDynastiesForUserQuery request)
+    {
+        return await Mediator.Send(request);
+    }
+    
+    [HttpGet("search")]
+    public async Task<PaginatedList<DynastyBasicDto>> Get([FromQuery] GetDynastiesQuery request)
     {
         return await Mediator.Send(request);
     }

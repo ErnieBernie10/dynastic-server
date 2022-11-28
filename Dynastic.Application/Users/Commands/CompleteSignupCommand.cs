@@ -8,8 +8,8 @@ namespace Dynastic.Application.Users.Commands;
 
 public class CompleteSignupCommand : IRequest<bool>
 {
-    public string? Firstname { get; set; }
-    public string MiddleName { get; set; }
+    public string Firstname { get; set; }
+    public string? MiddleName { get; set; }
     public string Lastname { get; set; }
     public DateTime BirthDate { get; set; }
 }

@@ -13,7 +13,7 @@ public static class DynasticMapster
     {
         var coaFileService = serviceCollection.GetRequiredService<ICoaFileService>();
 
-        TypeAdapterConfig<Dynasty, DynastyDto>.NewConfig()
+        TypeAdapterConfig<Dynasty, DynastyBasicDto>.NewConfig()
             .Map(dest => dest.CoaPath, d => coaFileService.GetCoaPath(d));
     }
 }
