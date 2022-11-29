@@ -70,7 +70,7 @@ public class AddPersonToDynastyCommandHandler : IRequestHandler<AddPersonToDynas
         {
             relationshipManager.AddChild(person, father, mother);
         }
-        else
+        else if (father is not null || mother is not null)
         {
             relationshipManager.AddChild(person, (mother ?? father) ?? throw new InvalidOperationException());
         }
