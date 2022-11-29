@@ -11,6 +11,7 @@ using Microsoft.OpenApi.Models;
 using Dynastic.API.Services;
 using Dynastic.Application.Common.Interfaces;
 using Dynastic.Infrastructure.Configuration;
+using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,6 +43,11 @@ builder.Services.AddSingleton<IFileStorageConfiguration>(fileStorageConfig);
 builder.Services.Configure<CosmosDbConfiguration>(builder.Configuration.GetSection("CosmosDb"));
 
 builder.Services.AddCloudInfrastructure(cosmosDbConfig);
+
+builder.Services.AddAzureClients(azureSearchBuilder => {
+    azureSearchBuilder.AddSearchClient(builder.Configuration.GetSection("SearchClient"));
+});
+
 builder.Services.AddApplication();
 
 builder.Services.AddSingleton<ICurrentUserService, CurrentUserService>();

@@ -21,7 +21,7 @@ public class DynastyController : ApiControllerBase<DynastyController>
     }
     
     [HttpGet("search")]
-    public async Task<PaginatedList<DynastyBasicDto>> Get([FromQuery] GetDynastiesQuery request)
+    public async Task<List<DynastyBasicDto>> Get([FromQuery] GetDynastiesQuery request)
     {
         return await Mediator.Send(request);
     }

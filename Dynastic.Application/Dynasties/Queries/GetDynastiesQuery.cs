@@ -1,5 +1,4 @@
 using Azure;
-using Azure.Search.Documents.Indexes;
 using Dynastic.Application.Common;
 using Dynastic.Application.Common.Interfaces;
 using Dynastic.Domain.Entities;
@@ -9,25 +8,29 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Dynastic.Application.Dynasties.Queries;
 
-public class GetDynastiesQuery : IRequest<PaginatedList<DynastyBasicDto>>
+public class GetDynastiesQuery : IRequest<List<DynastyBasicDto>>
 {
     public int Page { get; set; } = 1;
     public int PageSize { get; set; } = 20;
-    public string? Search { get; set; }
+    public string Search { get; set; } = default!;
 }
 
-public class GetDynastiesQueryHandler : IRequestHandler<GetDynastiesQuery, PaginatedList<DynastyBasicDto>>
+public class GetDynastiesQueryHandler : IRequestHandler<GetDynastiesQuery, List<DynastyBasicDto>>
 {
-    private readonly IApplicationDbContext _context;
+    private readonly IDynasticSearchContext _dynasticSearch;
 
-    public GetDynastiesQueryHandler(IApplicationDbContext context)
+    public GetDynastiesQueryHandler(IDynasticSearchContext dynasticSearch)
     {
-        _context = context;
+        _dynasticSearch = dynasticSearch;
     }
 
-    public async Task<PaginatedList<DynastyBasicDto>> Handle(GetDynastiesQuery request,
+    public async Task<List<DynastyBasicDto>> Handle(GetDynastiesQuery request,
         CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var response =
+            await _dynasticSearch.SearchWithPagination<Dynasty>(request.Search, request.Page, request.PageSize,
+                cancellationToken);
+
+        return response.Adapt<List<DynastyBasicDto>>();
     }
 }

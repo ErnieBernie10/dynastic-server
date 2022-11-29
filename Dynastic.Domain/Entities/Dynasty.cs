@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Dynastic.Domain.Common.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Dynastic.Domain.Entities;
 
-public class Dynasty : Base
+public class Dynasty : Base, ISearchable
 {
     public string Name { get; set; } = default!;
     public string? Description { get; set; }
