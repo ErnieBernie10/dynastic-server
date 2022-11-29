@@ -37,7 +37,13 @@ public class ErrorHandlingMiddleware
             }
 
             context.Response.StatusCode = (int) code;
-            await context.Response.WriteAsync(e.StackTrace);
+            await context.Response.WriteAsync(new ErrorDetails()
+            {
+                Message = e.Message,
+                StatusCode = code,
+                // TODO: Remove stacktrace for production
+                Trace = e.StackTrace,
+            }.ToString());
         }
     }
 }

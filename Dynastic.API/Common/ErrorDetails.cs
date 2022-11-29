@@ -1,11 +1,17 @@
+using System.Net;
+using System.Text.Json;
+
 namespace Dynastic.Common;
 
 public class ErrorDetails
 {
-    public List<Error> Errors { get; set; }
-}
+    public string Message { get; set; } = default!;
+    public string? Trace { get; set; }
+    public HttpStatusCode StatusCode { get; set; }
 
-public class Error
-{
-    public string Message { get; set; }
+    public override string ToString()
+    {
+        return JsonSerializer.Serialize(this,
+            new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+    }
 }
