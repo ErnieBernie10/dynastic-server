@@ -1,5 +1,6 @@
 using Azure;
 using Azure.Search.Documents;
+using Dynastic.Application.Common;
 using Dynastic.Application.Common.Interfaces;
 using Dynastic.Domain.Common.Interfaces;
 using Dynastic.Domain.Entities;
@@ -17,7 +18,7 @@ public class DynastySearchContext : IDynastySearchContext
         _client = client;
     }
 
-    public async Task<List<Dynasty>> SearchWithPagination(string? term, int page, int pageSize,
+    public async Task<PaginatedList<Dynasty>> SearchWithPagination(string? term, int page, int pageSize,
         CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrEmpty(term))
@@ -25,10 +26,14 @@ public class DynastySearchContext : IDynastySearchContext
             term = "*";
         }
 
-        return await _client
-            .Search<DynastyIndex>(term, new SearchOptions() { Skip = (page - 1) * pageSize, Size = pageSize, })
-            .Value
-            .GetResultsAsync()
+        var result = _client
+            .Search<DynastyIndex>(term,
+                new SearchOptions() { Skip = (page - 1) * pageSize, Size = pageSize, IncludeTotalCount = true })
+            .Value;
+        
+        var total = result.TotalCount;
+        
+        var items = await result.GetResultsAsync()
             .Select(document => new Dynasty() {
                 Id = new Guid(document.Document.Id),
                 Name = document.Document.Name,
@@ -44,5 +49,7 @@ public class DynastySearchContext : IDynastySearchContext
                 Motto = document.Document.Motto,
             })
             .ToListAsync(cancellationToken);
+
+        return new PaginatedList<Dynasty>(items, total ?? 0, page, pageSize);
     }
 }

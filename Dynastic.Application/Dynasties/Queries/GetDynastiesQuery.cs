@@ -8,14 +8,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Dynastic.Application.Dynasties.Queries;
 
-public class GetDynastiesQuery : IRequest<List<DynastyBasicDto>>
+public class GetDynastiesQuery : IRequest<PaginatedList<DynastyBasicDto>>
 {
     public int Page { get; set; } = 1;
     public int PageSize { get; set; } = 20;
     public string? Search { get; set; } = default!;
 }
 
-public class GetDynastiesQueryHandler : IRequestHandler<GetDynastiesQuery, List<DynastyBasicDto>>
+public class GetDynastiesQueryHandler : IRequestHandler<GetDynastiesQuery, PaginatedList<DynastyBasicDto>>
 {
     private readonly IDynastySearchContext _dynastySearch;
 
@@ -24,13 +24,13 @@ public class GetDynastiesQueryHandler : IRequestHandler<GetDynastiesQuery, List<
         _dynastySearch = dynastySearch;
     }
 
-    public async Task<List<DynastyBasicDto>> Handle(GetDynastiesQuery request,
+    public async Task<PaginatedList<DynastyBasicDto>> Handle(GetDynastiesQuery request,
         CancellationToken cancellationToken)
     {
         var response =
             await _dynastySearch.SearchWithPagination(request.Search, request.Page, request.PageSize,
                 cancellationToken);
 
-        return response.Adapt<List<DynastyBasicDto>>();
+        return response.AdaptItems<DynastyBasicDto>();
     }
 }
