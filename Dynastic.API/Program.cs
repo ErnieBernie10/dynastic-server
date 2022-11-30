@@ -1,18 +1,16 @@
 using Azure;
+using Azure.Search.Documents.Indexes.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Dynastic.Infrastructure;
 using Dynastic.Application;
 using Dynastic.Infrastructure.Persistence;
-using Dynastic.Infrastrucutre.Persistence;
 using Dynastic.API.Services;
 using Dynastic.Domain.Common.Interfaces;
 using Microsoft.OpenApi.Models;
-using Dynastic.API.Services;
 using Dynastic.Application.Common.Interfaces;
 using Dynastic.Infrastructure.Configuration;
-using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -36,6 +34,10 @@ var cosmosDbConfig = new CosmosDbConfiguration();
 builder.Configuration.Bind("CosmosDb", cosmosDbConfig);
 builder.Services.AddSingleton(cosmosDbConfig);
 
+var cognitiveSearchConfiguration = new CognitiveSearchConfiguration();
+builder.Configuration.Bind("SearchClient", cognitiveSearchConfiguration);
+builder.Services.AddSingleton(cognitiveSearchConfiguration);
+
 var fileStorageConfig = new FileStorageConfiguration(builder.Environment.IsDevelopment());
 builder.Configuration.Bind("AzureFileStorage", fileStorageConfig);
 builder.Services.AddSingleton<IFileStorageConfiguration>(fileStorageConfig);
@@ -43,13 +45,7 @@ builder.Services.AddSingleton<IFileStorageConfiguration>(fileStorageConfig);
 
 builder.Services.Configure<CosmosDbConfiguration>(builder.Configuration.GetSection("CosmosDb"));
 
-builder.Services.AddCloudInfrastructure(cosmosDbConfig);
-
-builder.Services.AddAzureClients(azureSearchBuilder => {
-    azureSearchBuilder.AddSearchClient(endpoint: new Uri(builder.Configuration["SearchClient:endpoint"]),
-        indexName: builder.Configuration["SearchClient:indexname"],
-        credential: new AzureKeyCredential(builder.Configuration["SearchClient:credential:key"]));
-});
+await builder.Services.AddCloudInfrastructure(cosmosDbConfig, cognitiveSearchConfiguration);
 
 builder.Services.AddApplication();
 

@@ -23,14 +23,16 @@ public class AddDynastyCommandHandler : IRequestHandler<AddDynastyCommand, Guid>
     private readonly ICurrentUserService _currentUserService;
     private readonly IAccessService _accessService;
     private readonly IUserInfoService _userInfoService;
+    private readonly IDynastySearchContext _searchContext;
 
     public AddDynastyCommandHandler(IApplicationDbContext context, ICurrentUserService currentUserService,
-        IAccessService accessService, IUserInfoService userInfoService)
+        IAccessService accessService, IUserInfoService userInfoService, IDynastySearchContext searchContext)
     {
         this._context = context;
         this._currentUserService = currentUserService;
         this._accessService = accessService;
         _userInfoService = userInfoService;
+        _searchContext = searchContext;
     }
 
     public async Task<Guid> Handle(AddDynastyCommand request, CancellationToken cancellationToken)
@@ -64,6 +66,7 @@ public class AddDynastyCommandHandler : IRequestHandler<AddDynastyCommand, Guid>
                 }
             }, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
+
         return entity.Entity.Id;
     }
 }

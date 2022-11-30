@@ -17,18 +17,18 @@ public class GetDynastiesQuery : IRequest<List<DynastyBasicDto>>
 
 public class GetDynastiesQueryHandler : IRequestHandler<GetDynastiesQuery, List<DynastyBasicDto>>
 {
-    private readonly IDynasticSearchContext _dynasticSearch;
+    private readonly IDynastySearchContext _dynastySearch;
 
-    public GetDynastiesQueryHandler(IDynasticSearchContext dynasticSearch)
+    public GetDynastiesQueryHandler(IDynastySearchContext dynastySearch)
     {
-        _dynasticSearch = dynasticSearch;
+        _dynastySearch = dynastySearch;
     }
 
     public async Task<List<DynastyBasicDto>> Handle(GetDynastiesQuery request,
         CancellationToken cancellationToken)
     {
         var response =
-            await _dynasticSearch.SearchWithPagination<Dynasty>(request.Search, request.Page, request.PageSize,
+            await _dynastySearch.SearchWithPagination(request.Search, request.Page, request.PageSize,
                 cancellationToken);
 
         return response.Adapt<List<DynastyBasicDto>>();
