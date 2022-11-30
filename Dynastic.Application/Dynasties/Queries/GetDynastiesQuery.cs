@@ -12,7 +12,7 @@ public class GetDynastiesQuery : IRequest<List<DynastyBasicDto>>
 {
     public int Page { get; set; } = 1;
     public int PageSize { get; set; } = 20;
-    public string Search { get; set; } = default!;
+    public string? Search { get; set; } = default!;
 }
 
 public class GetDynastiesQueryHandler : IRequestHandler<GetDynastiesQuery, List<DynastyBasicDto>>

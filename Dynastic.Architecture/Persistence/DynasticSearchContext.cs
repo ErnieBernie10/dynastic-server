@@ -14,8 +14,13 @@ public class DynasticSearchContext : IDynasticSearchContext
         Client = client;
     }
 
-    public async Task<List<T>> SearchWithPagination<T>(string term, int page, int pageSize, CancellationToken cancellationToken = default) where T : ISearchable
+    public async Task<List<T>> SearchWithPagination<T>(string? term, int page, int pageSize, CancellationToken cancellationToken = default) where T : ISearchable
     {
+        if (string.IsNullOrEmpty(term))
+        {
+            term = "*";
+        }
+
         return await Client.Search<T>(term)
             .Value
             .GetResultsAsync()
