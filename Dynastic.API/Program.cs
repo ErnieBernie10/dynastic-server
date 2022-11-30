@@ -1,3 +1,4 @@
+using Azure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
@@ -45,7 +46,9 @@ builder.Services.Configure<CosmosDbConfiguration>(builder.Configuration.GetSecti
 builder.Services.AddCloudInfrastructure(cosmosDbConfig);
 
 builder.Services.AddAzureClients(azureSearchBuilder => {
-    azureSearchBuilder.AddSearchClient(builder.Configuration.GetSection("SearchClient"));
+    azureSearchBuilder.AddSearchClient(endpoint: new Uri(builder.Configuration["SearchClient:endpoint"]),
+        indexName: builder.Configuration["SearchClient:indexname"],
+        credential: new AzureKeyCredential(builder.Configuration["SearchClient:credential:key"]));
 });
 
 builder.Services.AddApplication();

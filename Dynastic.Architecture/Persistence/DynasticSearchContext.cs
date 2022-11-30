@@ -19,7 +19,6 @@ public class DynasticSearchContext : IDynasticSearchContext
         return await Client.Search<T>(term)
             .Value
             .GetResultsAsync()
-            .Where(document => document.Score > 0.5)
             .Skip(page - 1)
             .Take(pageSize)
             .Select(document => document.Document)
