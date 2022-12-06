@@ -11,7 +11,6 @@ namespace Dynastic.Domain.Entities;
 
 public class Dynasty : Base, ISearchable
 {
-    public string _rid { get; set; } = default!;
     public string Name { get; set; } = default!;
     public string? Description { get; set; }
     public string? Motto { get; set; }
