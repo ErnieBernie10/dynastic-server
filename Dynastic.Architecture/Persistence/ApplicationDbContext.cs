@@ -72,8 +72,10 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
         modelBuilder.Entity<UserInfo>()
             .ToContainer(nameof(Users))
             .HasNoDiscriminator();
+        modelBuilder.Entity<DynastyInvitation>().ToContainer(nameof(DynastyInvitations)).HasNoDiscriminator();
     }
 
     public DbSet<Dynasty> Dynasties => Set<Dynasty>();
     public DbSet<UserInfo> Users => Set<UserInfo>();
+    public DbSet<DynastyInvitation> DynastyInvitations => Set<DynastyInvitation>();
 }

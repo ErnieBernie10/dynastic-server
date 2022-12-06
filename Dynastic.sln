@@ -18,6 +18,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dynastic.Application.Test", "Dynastic.Application.Test\Dynastic.Application.Test.csproj", "{D9F69597-AA35-4FD4-B6F0-324D9C350BEB}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AzureFunctions", "AzureFunctions", "{7BB9ED4A-C265-4200-8804-FF66A1C50ADA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dynastic.Email", "Dynastic.Email\Dynastic.Email.csproj", "{FCEED28E-C10A-461D-A9BA-3F2659B6E0F0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,11 +48,18 @@ Global
 		{D9F69597-AA35-4FD4-B6F0-324D9C350BEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D9F69597-AA35-4FD4-B6F0-324D9C350BEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D9F69597-AA35-4FD4-B6F0-324D9C350BEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCEED28E-C10A-461D-A9BA-3F2659B6E0F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCEED28E-C10A-461D-A9BA-3F2659B6E0F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCEED28E-C10A-461D-A9BA-3F2659B6E0F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCEED28E-C10A-461D-A9BA-3F2659B6E0F0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D8F09AB5-57AD-4F19-A90D-2201B686137A}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FCEED28E-C10A-461D-A9BA-3F2659B6E0F0} = {7BB9ED4A-C265-4200-8804-FF66A1C50ADA}
 	EndGlobalSection
 EndGlobal

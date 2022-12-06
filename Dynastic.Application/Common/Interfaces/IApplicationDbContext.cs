@@ -13,6 +13,7 @@ public interface IApplicationDbContext
 {
     public DbSet<Dynasty> Dynasties { get; }
     public DbSet<UserInfo> Users { get; }
+    public DbSet<DynastyInvitation> DynastyInvitations { get; }
 
 
     public DatabaseFacade Database { get; }

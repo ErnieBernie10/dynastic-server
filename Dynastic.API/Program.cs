@@ -42,10 +42,14 @@ var fileStorageConfig = new FileStorageConfiguration(builder.Environment.IsDevel
 builder.Configuration.Bind("AzureFileStorage", fileStorageConfig);
 builder.Services.AddSingleton<IFileStorageConfiguration>(fileStorageConfig);
 
+var serviceBusConfig = new ServiceBusConfiguration();
+builder.Configuration.Bind("AzureServiceBus", serviceBusConfig);
+builder.Services.AddSingleton(serviceBusConfig);
+
 
 builder.Services.Configure<CosmosDbConfiguration>(builder.Configuration.GetSection("CosmosDb"));
 
-await builder.Services.AddCloudInfrastructure(cosmosDbConfig, cognitiveSearchConfiguration);
+await builder.Services.AddCloudInfrastructure(cosmosDbConfig, cognitiveSearchConfiguration, serviceBusConfig);
 
 builder.Services.AddApplication();
 

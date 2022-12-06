@@ -1,9 +1,11 @@
 ﻿using Azure;
+using Azure.Messaging.ServiceBus;
 using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Indexes.Models;
 using Dynastic.Application.Common.Interfaces;
 using Dynastic.Application.Services;
 using Dynastic.Infrastructure.Configuration;
+using Dynastic.Infrastructure.Messaging;
 using Dynastic.Infrastructure.Persistence;
 using Dynastic.Infrastructure.SearchEntities;
 using Microsoft.Azure.Cosmos;
@@ -30,12 +32,32 @@ public static class DependencyInjection
     }
 
     public static async Task<IServiceCollection> AddCloudInfrastructure(this IServiceCollection services,
-        CosmosDbConfiguration configuration, CognitiveSearchConfiguration cognitiveSearchConfiguration)
+        CosmosDbConfiguration configuration, CognitiveSearchConfiguration cognitiveSearchConfiguration, ServiceBusConfiguration serviceBusConfiguration)
     {
         services.AddDbContext<IApplicationDbContext, ApplicationDbContext>(options =>
             options.UseCosmos(configuration.EndpointUri, configuration.PrimaryKey, "Dynastic"));
 
-        // Setup index
+        await AddCognitiveSearch(cognitiveSearchConfiguration);
+        
+        services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
+        services.AddScoped<IDynastySearchContext, DynastySearchContext>();
+
+        services.AddAzureClients(azureClientsBuilder =>
+        {
+            azureClientsBuilder.AddSearchClient(endpoint: new Uri(cognitiveSearchConfiguration.EndpointUri),
+                indexName: cognitiveSearchConfiguration.IndexName,
+                credential: new AzureKeyCredential(cognitiveSearchConfiguration.QueryKey));
+
+            azureClientsBuilder.AddServiceBusClient(serviceBusConfiguration.PrimaryConnectionString);
+        });
+
+        services.AddSingleton<IServiceBus, ServiceBus>();
+
+        return services;
+    }
+
+    private static async Task AddCognitiveSearch(CognitiveSearchConfiguration cognitiveSearchConfiguration)
+    {
         var fieldBuilder = new FieldBuilder();
         var searchFields = fieldBuilder.Build(typeof(DynastyIndex));
 
@@ -47,16 +69,5 @@ public static class DependencyInjection
         );
 
         await adminClient.CreateOrUpdateIndexAsync(definition);
-
-        services.AddAzureClients(azureSearchBuilder => {
-            azureSearchBuilder.AddSearchClient(endpoint: new Uri(cognitiveSearchConfiguration.EndpointUri),
-                indexName: cognitiveSearchConfiguration.IndexName,
-                credential: new AzureKeyCredential(cognitiveSearchConfiguration.QueryKey));
-        });
-
-        services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
-        services.AddScoped<IDynastySearchContext, DynastySearchContext>();
-
-        return services;
     }
 }
