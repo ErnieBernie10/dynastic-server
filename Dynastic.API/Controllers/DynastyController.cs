@@ -40,8 +40,14 @@ public class DynastyController : ApiControllerBase<DynastyController>
         return await Mediator.Send(command);
     }
     
-    [HttpPost("{id:guid}/Invite")]
+    [HttpPost("Invite")]
     public async Task<bool> InviteToDynasty([FromBody] InviteToDynastyCommand command)
+    {
+        return await Mediator.Send(command);
+    }
+    
+    [HttpPost("RequestJoin")]
+    public async Task<bool> InviteToDynasty([FromBody] JoinRequestCommand command)
     {
         return await Mediator.Send(command);
     }

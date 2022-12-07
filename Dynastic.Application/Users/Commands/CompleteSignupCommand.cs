@@ -6,15 +6,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Dynastic.Application.Users.Commands;
 
-public class CompleteSignupCommand : IRequest<bool>
+public class CompleteSignupCommand : IRequest<Guid>
 {
     public string Firstname { get; set; }
     public string? MiddleName { get; set; }
     public string Lastname { get; set; }
     public DateTime BirthDate { get; set; }
+    public string Email { get; set; }
 }
 
-public class CompleteSignupCommandHandler : IRequestHandler<CompleteSignupCommand, bool>
+public class CompleteSignupCommandHandler : IRequestHandler<CompleteSignupCommand, Guid>
 {
     private readonly IApplicationDbContext _context;
     private readonly ICurrentUserService _currentUserService;
@@ -25,24 +26,27 @@ public class CompleteSignupCommandHandler : IRequestHandler<CompleteSignupComman
         _currentUserService = currentUserService;
     }
 
-    public async Task<bool> Handle(CompleteSignupCommand request, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(CompleteSignupCommand request, CancellationToken cancellationToken)
     {
         var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId.Equals(_currentUserService.UserId),
             cancellationToken: cancellationToken);
 
         if (user is not null)
         {
-            return false;
+            return user.Id;
         }
 
-        _context.Users.Add(new UserInfo() {
+        var userInfo = await _context.Users.AddAsync(new UserInfo() {
             Firstname = request.Firstname,
             Lastname = request.Lastname,
             MiddleName = request.MiddleName,
             BirthDate = request.BirthDate,
+            Email = request.Email,
             UserId = _currentUserService.UserId,
-        });
+        }, cancellationToken);
+        
         await _context.SaveChangesAsync(cancellationToken);
-        return true;
+
+        return userInfo.Entity.Id;
     }
 }

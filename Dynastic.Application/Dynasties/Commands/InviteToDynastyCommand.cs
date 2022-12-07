@@ -1,5 +1,6 @@
 using Ardalis.GuardClauses;
 using Dynastic.Application.Common.Interfaces;
+using Dynastic.Application.Common.Utils;
 using Dynastic.Domain.Common.Interfaces;
 using Dynastic.Domain.Common.Messaging;
 using Dynastic.Domain.Entities;
@@ -13,6 +14,7 @@ public class InviteToDynastyCommand : IRequest<bool>
 {
     public Guid DynastyId { get; set; }
     public string Email { get; set; }
+    public string Callback { get; set; }
 }
 
 public class InviteToDynastyCommandHandler : IRequestHandler<InviteToDynastyCommand, bool>
@@ -48,24 +50,31 @@ public class InviteToDynastyCommandHandler : IRequestHandler<InviteToDynastyComm
             throw new ArgumentException("User not defined");
         }
 
-        // TODO: Store in some constant
+        var message = new EmailMessage() {
+            Content =
+                $"{currentUser.Firstname} {currentUser.Lastname} invited you to their dynasty {dynasty?.Name}!{Environment.NewLine}{GetLink(request.Callback, entity.Entity.Id.ToString())}",
+            Subject = $"Invitation to {dynasty?.Name}",
+            To = request.Email
+        };
+
+        // TODO: Store queue name in some constant
         await _serviceBus.SendMessage("dynasty-email",
-            JsonSerializer.Serialize(
-                new InviteToDynastyMessage() {
-                    Content =
-                        $"{currentUser.Firstname} {currentUser.Lastname} invited you to their dynasty {dynasty?.Name}!{Environment.NewLine}{GetLink(entity.Entity.Id.ToString())}",
-                    Subject = $"Invitation to {dynasty?.Name}",
-                    To = request.Email,
-                }, new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }));
-        
+            JsonSerializer.Serialize(message,
+                new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }));
+
         await _context.SaveChangesAsync(cancellationToken);
-        
+
         return true;
     }
 
-    private string GetLink(string code)
+    private string GetLink(string callback, string code)
     {
-        // TODO: Construct link by taking info from http origin header or from some environment variable.
-        return $"https://www.dynastic.be/invite?code={code}";
+        if (!UrlValidation.IsValidEnvironment(callback))
+        {
+            throw new ArgumentException("Callback is not a valid link or is not pointing to a correct environment.");
+        }
+
+        var uri = new UriBuilder(callback) { Query = $"?code={code}" };
+        return uri.Uri.ToString();
     }
 }

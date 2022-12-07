@@ -78,4 +78,5 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<Dynasty> Dynasties => Set<Dynasty>();
     public DbSet<UserInfo> Users => Set<UserInfo>();
     public DbSet<DynastyInvitation> DynastyInvitations => Set<DynastyInvitation>();
+    public DbSet<DynastyJoinRequest> DynastyJoinRequests => Set<DynastyJoinRequest>();
 }

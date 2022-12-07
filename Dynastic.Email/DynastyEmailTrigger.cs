@@ -18,7 +18,7 @@ public static class DynastyEmailTrigger
         [SendGrid(ApiKey = "SendGridApiKey")] IAsyncCollector<SendGridMessage> messageCollector,
         ILogger log)
     {
-        var emailObject = JsonSerializer.Deserialize<InviteToDynastyMessage>(myQueueItem,
+        var emailObject = JsonSerializer.Deserialize<EmailMessage>(myQueueItem,
             new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
         
         var message = new SendGridMessage();

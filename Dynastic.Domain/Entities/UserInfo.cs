@@ -6,5 +6,6 @@ public class UserInfo : Base
     public string? Firstname { get; set; }
     public string MiddleName { get; set; }
     public string Lastname { get; set; }
+    public string Email { get; set; }
     public DateTime BirthDate { get; set; }
 }

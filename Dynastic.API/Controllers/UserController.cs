@@ -16,7 +16,7 @@ public class UserController : ApiControllerBase<UserController>
     }
 
     [HttpPost]
-    public async Task<bool> CompleteSignup([FromBody] CompleteSignupCommand body)
+    public async Task<Guid> CompleteSignup([FromBody] CompleteSignupCommand body)
     {
         return await Mediator.Send(body);
     }
