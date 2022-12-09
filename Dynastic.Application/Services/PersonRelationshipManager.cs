@@ -60,10 +60,12 @@ public class PersonRelationshipManager : IPersonRelationshipManager
 
     public Relationship? GetRelationship(Person? person, Person? partner)
     {
-        return _dynasty.Relationships.FirstOrDefault(r =>
-                   r.PartnerId.Equals(partner?.Id) && r.PersonId.Equals(person?.Id) ||
-                   r.PartnerId.Equals(person?.Id) || r.PersonId.Equals(partner?.Id)) ??
-               GetSingleParentRelationship((person ?? partner) ?? throw new InvalidOperationException());
+        return person is null && partner is null
+            ? null
+            : _dynasty.Relationships.FirstOrDefault(r =>
+                  r.PartnerId.Equals(partner?.Id) && r.PersonId.Equals(person?.Id) ||
+                  r.PartnerId.Equals(person?.Id) || r.PersonId.Equals(partner?.Id)) ??
+              GetSingleParentRelationship((person ?? partner) ?? throw new InvalidOperationException());
     }
 
     public IEnumerable<Relationship> GetRelationships(Person person)
@@ -89,13 +91,16 @@ public class PersonRelationshipManager : IPersonRelationshipManager
 
         RemoveChild(person, oldMother, oldFather);
 
-        if (newMother is not null && newFather is not null)
+        if (newMother is not null || newFather is not null)
         {
-            AddChild(person, newFather, newMother);
-        }
-        else
-        {
-            AddChild(person, (newFather ?? newMother) ?? throw new InvalidOperationException());
+            if (newMother is not null && newFather is not null)
+            {
+                AddChild(person, newFather, newMother);
+            }
+            else
+            {
+                AddChild(person, ((newFather ?? newMother) ?? throw new InvalidOperationException()));
+            }
         }
 
         person.MotherId = newMother?.Id ?? null;
