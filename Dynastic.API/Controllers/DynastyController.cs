@@ -46,6 +46,12 @@ public class DynastyController : ApiControllerBase<DynastyController>
         return await Mediator.Send(command);
     }
     
+    [HttpPut("Invite/{Id:guid}/Redeem")]
+    public async Task<Guid> RedeemDynastyInvite([FromRoute] RedeemDynastyInviteCommand command)
+    {
+        return await Mediator.Send(command);
+    }
+    
     [HttpPost("RequestJoin")]
     public async Task<bool> InviteToDynasty([FromBody] JoinRequestCommand command)
     {
